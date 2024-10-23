@@ -95,3 +95,29 @@ if (window.location.pathname.endsWith('privacy.html')) {
         window.location.href = 'index.html';
     }
 }
+if (window.location.pathname.endsWith('privacy.html')) {
+    // Get the checkbox and button elements
+    const agreeCheckbox = document.getElementById('agree-checkbox');
+    const agreeButton = document.getElementById('agree-button');
+
+    // Listen for changes on the checkbox
+    agreeCheckbox.addEventListener('change', () => {
+        if (agreeCheckbox.checked) {
+            // Enable the button
+            agreeButton.disabled = false;
+            agreeButton.classList.remove('cursor-not-allowed', 'opacity-50');
+            agreeButton.classList.add('hover:bg-blue-700', 'focus:outline-none', 'focus:bg-blue-700');
+        } else {
+            // Disable the button
+            agreeButton.disabled = true;
+            agreeButton.classList.add('cursor-not-allowed', 'opacity-50');
+            agreeButton.classList.remove('hover:bg-blue-700', 'focus:outline-none', 'focus:bg-blue-700');
+        }
+    });
+
+    // Handle button click
+    agreeButton.addEventListener('click', () => {
+        // Redirect to the next page
+        window.location.href = 'next.html';
+    });
+}
