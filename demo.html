@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag and Drop Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .icon-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            padding: 10px;
+            background-color: #eee;
+            text-align: center;
+            cursor: move;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .drop-box {
+            width: 45%;
+            min-height: 150px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 2px dashed #bbb;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .drop-box h3 {
+            text-align: center;
+            margin-top: 0;
+        }
+        .list-item {
+            padding: 5px;
+            margin: 5px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            list-style: none;
+            cursor: move;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-1px, -2px) rotate(-1deg); }
+            40% { transform: translate(-3px, 0px) rotate(1deg); }
+            60% { transform: translate(3px, 2px) rotate(0deg); }
+            80% { transform: translate(1px, -1px) rotate(1deg); }
+            100% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
+        .highlight-incorrect {
+            background-color: #f8d7da;
+            border-color: red;
+        }
+        .highlight-correct {
+            background-color: #d4edda;
+            border-color: green;
+        }
+        #check-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #check-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="icon-container" id="icon-container">
+        <div class="icon" draggable="true" data-id="1">Icon 1</div>
+        <div class="icon" draggable="true" data-id="2">Icon 2</div>
+        <div class="icon" draggable="true" data-id="3">Icon 3</div>
+        <div class="icon" draggable="true" data-id="4">Icon 4</div>
+        <div class="icon" draggable="true" data-id="5">Icon 5</div>
+    </div>
+
+    <div class="drop-box" id="box1">
+        <h3>Box 1</h3>
+        <ul id="list1"></ul>
+    </div>
+    <div class="drop-box" id="box2">
+        <h3>Box 2</h3>
+        <ul id="list2"></ul>
+    </div>
+
+    <button id="check-button">Check</button>
+
+    <script>
+        // Data: define which icons belong to which boxes
+        const correctAssignment = {
+            box1: ['1', '2'],
+            box2: ['3', '4', '5']
+        };
+
+        // Drag and Drop functionality
+        const icons = document.querySelectorAll('.icon');
+        icons.forEach(icon => {
+            icon.addEventListener('dragstart', dragStart);
+        });
+
+        const boxes = document.querySelectorAll('.drop-box');
+        boxes.forEach(box => {
+            box.addEventListener('dragover', dragOver);
+            box.addEventListener('drop', drop);
+        });
+
+        const iconContainer = document.getElementById('icon-container');
+        iconContainer.addEventListener('dragover', dragOver);
+        iconContainer.addEventListener('drop', drop);
+
+        function dragStart(e) {
+            const target = e.target;
+            e.dataTransfer.setData('text/plain', target.dataset.id);
+            e.dataTransfer.setData('source', target.parentNode.id);
+            e.dataTransfer.setData('type', target.classList.contains('icon') ? 'icon' : 'list-item');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const type = e.dataTransfer.getData('type');
+            let draggedElement;
+
+            if (type === 'icon') {
+                draggedElement = document.querySelector(`.icon[data-id='${id}']`);
+            } else if (type === 'list-item') {
+                draggedElement = document.querySelector(`.list-item[data-id='${id}']`);
+            }
+
+            // Remove the element from its current parent
+            if (draggedElement && draggedElement.parentNode) {
+                draggedElement.parentNode.removeChild(draggedElement);
+            }
+
+            // Remove highlight classes
+            draggedElement.classList.remove('highlight-incorrect', 'highlight-correct');
+
+            if (e.currentTarget.id === 'icon-container') {
+                // If dropped back into the icon container
+                iconContainer.appendChild(draggedElement);
+                if (type === 'list-item') {
+                    // Convert list-item back to icon
+                    draggedElement.className = 'icon';
+                    draggedElement.addEventListener('dragstart', dragStart);
+                }
+            } else {
+                // Dropped into a drop box
+                const list = e.currentTarget.querySelector('ul');
+                let listItem;
+                if (type === 'icon') {
+                    // Create a new list item
+                    listItem = document.createElement('li');
+                    listItem.className = 'list-item';
+                    listItem.dataset.id = id;
+                    listItem.textContent = draggedElement.textContent;
+                    listItem.draggable = true;
+                    listItem.addEventListener('dragstart', dragStart);
+                    list.appendChild(listItem);
+                } else if (type === 'list-item') {
+                    // Move the existing list item
+                    list.appendChild(draggedElement);
+                }
+            }
+        }
+
+        // Check button functionality
+        const checkButton = document.getElementById('check-button');
+        checkButton.addEventListener('click', checkBoxes);
+
+        function checkBoxes() {
+            ['box1', 'box2'].forEach(boxId => {
+                const box = document.getElementById(boxId);
+                const listItems = box.querySelectorAll('.list-item');
+                listItems.forEach(item => {
+                    const correctIds = correctAssignment[boxId];
+                    // Remove previous highlights
+                    item.classList.remove('highlight-incorrect', 'highlight-correct', 'shake');
+                    if (correctIds.includes(item.dataset.id)) {
+                        // Correct item
+                        item.classList.add('shake', 'highlight-correct');
+                    } else {
+                        // Incorrect item
+                        item.classList.add('shake', 'highlight-incorrect');
+                    }
+                    setTimeout(() => {
+                        item.classList.remove('shake');
+                    }, 500);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
