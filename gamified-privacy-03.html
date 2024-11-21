@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GamifiedPrivacyPolicy_2_DisclosureOfInformation</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .title {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-family: Arial, sans-serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #privateDataChest {
+            width: 50%;
+            max-width: 500px;
+            height: auto;
+        }
+
+        .key-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* Space between keys */
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .key-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .key {
+            width: 50px; /* Default size for small screens */
+            height: auto;
+        }
+
+        .key-label {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        @media (min-width: 600px) {
+            .key {
+                width: 75px; /* Larger size for larger screens */
+            }
+        }
+
+        @media (min-width: 900px) {
+            .key {
+                width: 100px; /* Maximum size for wide screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title -->
+    <div class="title">Disclosure of Information</div>
+
+    <!-- Chest -->
+    <img src="privateDataChest.png" alt="Private Data Chest" id="privateDataChest">
+
+    <!-- Keys -->
+    <div class="key-container">
+        <!-- Incorrect Key -->
+        <div class="key-wrapper">
+            <img src="privateDataKey.png" alt="Key" class="key incorrect-key" id="incorrectKey1">
+            <div class="key-label">Incorrect</div>
+        </div>
+
+        <!-- Correct Key -->
+        <div class="key-wrapper">
+            <img src="privateDataKey.png" alt="Key" class="key correct-key" id="correctKey1">
+            <div class="key-label">Correct</div>
+        </div>
+
+        <!-- Incorrect Key -->
+        <div class="key-wrapper">
+            <img src="privateDataKey.png" alt="Key" class="key incorrect-key" id="incorrectKey2">
+            <div class="key-label">Incorrect</div>
+        </div>
+
+        <!-- Incorrect Key -->
+        <div class="key-wrapper">
+            <img src="privateDataKey.png" alt="Key" class="key incorrect-key" id="incorrectKey3">
+            <div class="key-label">Incorrect</div>
+        </div>
+
+        <!-- Correct Key -->
+        <div class="key-wrapper">
+            <img src="privateDataKey.png" alt="Key" class="key correct-key" id="correctKey2">
+            <div class="key-label">Correct</div>
+        </div>
+
+        <!-- Incorrect Key -->
+        <div class="key-wrapper">
+            <img src="privateDataKey.png" alt="Key" class="key incorrect-key" id="incorrectKey4">
+            <div class="key-label">Incorrect</div>
+        </div>
+    </div>
+</body>
+</html>
