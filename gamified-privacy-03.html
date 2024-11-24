@@ -26,6 +26,25 @@
             color: #333;
         }
         
+        /* Progress Bar Container (Grey Background) */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px; /* Thicker bar */
+            background-color: grey; /* Grey background */
+            z-index: 200; /* Ensure it appears above other content */
+        }
+        
+        /* Progress Bar (Light Green Indicator) */
+        .progress-bar {
+            width: 0%; /* Start with no progress */
+            height: 100%;
+            background-color: rgba(0, 245, 0, 1); /* Light green progress bar */
+            transition: width 0.3s ease-in-out; /* Smooth progress update */
+        }
+
         /* Narrative Bubble */
         .narrative-bubble {
             position: absolute;
@@ -128,7 +147,20 @@
             text-align: center;
             width: 100%; /* Match the width of the chest-container */
             margin-bottom: 1rem; /* Add space between the text and the chest */
-            
+        }
+
+        #chest-text {
+            position: absolute;
+            top: 88%;
+            margin: 0;
+            padding: 0.5rem;
+            color: grey;
+            font-size: 1.4rem; /* Make the text much larger */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            width: 100%; /* Match the width of the chest-container */
+            margin-bottom: 1rem; /* Add space between the text and the chest */
         }
 
         /* Correct state: Green */
@@ -145,7 +177,7 @@
         .key-container {
             display: flex;
             justify-content: center;
-            gap: 2rem; /* Increased gap between keys */
+            gap: 1.3rem; /* Increased gap between keys */
             flex-wrap: wrap;
         }
         
@@ -158,9 +190,9 @@
         
         /* Key */
         .key {
-            width: 14vw; /* Increased key size */
+            width: 16vh; /* Increased key size */
             height: auto;
-            max-width: 140px; /* Maximum key width */
+            max-width: 150px; /* Maximum key width */
             cursor: grab;
             transition: transform 0.3s ease;
         }
@@ -171,7 +203,7 @@
             font-size: 22px; /* Responsive font size */
             font-family: Arial, sans-serif;
             text-align: center;
-            max-width: 160px; /* Restrict label width */
+            max-width: 140px; /* Restrict label width */
             overflow-wrap: break-word; /* Compatibility for older browsers */
             white-space: normal; /* Allow wrapping */
             word-break: keep-all; /* Prevent splitting words */
@@ -207,6 +239,14 @@
                 height: 35vw;
             }
         
+            #chest-text {
+                position: absolute;
+                top: 88%;
+                margin: 0;
+                color: grey;
+                font-size: 0.6rem; /* Make the text much larger */
+            }
+
             .key {
                 width: 18vw;
             }
@@ -233,10 +273,10 @@
 
         .instruction-text {
             position: fixed; /* Fix the text at the bottom of the page */
-            bottom: 2rem; /* Adjust distance from the bottom */
+            bottom: .4rem; /* Adjust distance from the bottom */
             left: 50%; /* Center align the text */
             transform: translateX(-50%); /* Center horizontally */
-            font-size: 2vw; /* Larger font size */
+            font-size: 3vh; /* Larger font size */
             font-family: Arial, sans-serif;
             text-align: center;
             color: rgba(0, 0, 0, 0.3); /* Initial transparency */
@@ -259,22 +299,94 @@
                 color: rgba(0, 0, 0, 1); /* Fully opaque */
             }
         }
+
+        .go-next-button {
+            position: fixed;
+            bottom: 2%; /* Distance from the bottom of the screen */
+            right: 2%; /* Distance from the right of the screen */
+            padding: 0.8rem 1.5rem; /* Adjust padding for size */
+            font-size: 1.2rem; /* Text size */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            color: white; /* Text color */
+            background-color: grey; /* Default button color */
+            border: none; /* Remove borders */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            opacity: 0; /* Start hidden */
+            transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+        }
+        
+        /* Hover effect */
+        .go-next-button:hover {
+            background-color: black; /* Change to black on hover */
+        }
+        
+        /* Show the button */
+        .go-next-button.show {
+            display: block;
+            opacity: 1; /* Fade in */
+        }
+
+        .triangle-animation {
+            position: fixed;
+            bottom: 8%; /* Position above the button */
+            right: 2%; /* Align with the button */
+            display: flex;
+            gap: 0.5rem; /* Spacing between triangles */
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent; /* Adjust for right-pointing triangle */
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid grey; /* Default triangle color pointing right */
+            animation: triangle-blink 0.9s infinite;
+        }
+        
+        .triangle:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .triangle:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .triangle:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes triangle-blink {
+            0%, 100% {
+                border-left-color: grey; /* Grey by default */
+            }
+            50% {
+                border-left-color: black; /* Black when active */
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Title -->
     <div class="title">Disclosure of Information</div>
 
+    <!-- Progress Bar -->
+    <div id="progress-bar-container" class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
     <!-- Narrative Bubble -->
     <div class="narrative-bubble">
         <p id="narrative-text" class="typing-text">In <strong>some</strong> cases, we have to <strong>DISCLOSE</strong> your information...</p>
         <img src="./img/narritive.png" alt="Narrative Avatar" class="narrative-avatar">
-    </div>
+    </div> 
 
     <!-- Chest -->
     <div class="chest-container">
         <p id="chest-state-text" class="chest-state-text"></p>
         <div id="chest" class="chest default"></div>
+        <p id="chest-text">Your Private Information</p>
     </div>
 
     <!-- Keys -->
@@ -311,15 +423,22 @@
         </div>
     </div>
 
-    <Space>
-    <Space>
     <!-- Instructional Text -->
     <div class="instruction-text">
         Drag each <strong>"key"</strong> to see if it can unlock the <strong>"chest"</strong>!
     </div>
+    
+    <!-- Go Next Button -->
+    <div id="triangle-animation" class="triangle-animation" style="display: none;">
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+    </div>
+    <button id="go-next-button" class="go-next-button">Go Next</button>
 
 
     <script>
+        const pageProgress = 3; 
         const chest = document.getElementById('chest');
         const chestStateText = document.getElementById('chest-state-text');
         const keys = document.querySelectorAll('.key');
@@ -328,10 +447,10 @@
         // Text binding for each key
         const keyTexts = {
             key1: 'Commerce',
-            key2: 'Legal Requirement',
+            key2: 'By Legal Requirement',
             key3: 'Your Partner Wants It',
             key4: 'Our Boss Wants It',
-            key5: 'Protection of Rights',
+            key5: 'To Protect Your Rights',
             key6: 'Sell to Scammers',
         };
 
@@ -420,6 +539,7 @@
             keyElement.style.transform = 'translate(0, 0)';
         });
 
+        // Section Description Text
         document.addEventListener('DOMContentLoaded', () => {
             const narrativeText = document.getElementById('narrative-text');
             const originalContent = narrativeText.innerHTML.trim(); // Capture the original HTML content
@@ -486,11 +606,61 @@
                     }
         
                     index++;
-                    setTimeout(typeNextElement, 100); // Adjust delay between characters/elements
+                    setTimeout(typeNextElement, 50); // Adjust delay between characters/elements
                 }
             }
         
             typeNextElement(); // Start the animation
+        });
+
+        // Go Next Button
+        document.addEventListener('DOMContentLoaded', () => {
+            const chest = document.getElementById('chest');
+            const goNextButton = document.getElementById('go-next-button');
+            const triangleAnimation = document.getElementById('triangle-animation');
+            const keys = document.querySelectorAll('.key');
+            const triedKeys = new Set(); // To track keys that have been tried
+        
+            // Drag and drop events
+            keys.forEach((key) => {
+                key.addEventListener('dragstart', (e) => {
+                    const keyId = key.id;
+                    e.dataTransfer.setData('keyId', keyId);
+                });
+            });
+        
+            chest.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Allow drop
+            });
+        
+            chest.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const keyId = e.dataTransfer.getData('keyId');
+                const progressBar = document.getElementById('progress-bar');
+                triedKeys.add(keyId); // Add the key to the tried set
+        
+                // Check if all six keys have been tried
+                if (triedKeys.size === keys.length) {
+                    goNextButton.classList.add('show'); // Show the button
+                    triangleAnimation.style.display = 'flex'; // Show the triangle animation
+                    progressBar.style.width = `${(pageProgress/6) * 100}%`;
+                }
+            });
+        
+            // Add click handler for "Go Next" button
+            goNextButton.addEventListener('click', () => {
+                localStorage.setItem('progressValue', pageProgress);
+                window.location.href = 'gamified-privacy-04.html'; // Navigate to the next page
+            });
+        });
+
+        // Progress bar
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progress-bar');
+            const progressValue = localStorage.getItem('progressValue') || 0; // Default to 0 if not set
+        
+            // Update the progress bar width
+            progressBar.style.width = `${(progressValue/6) * 100}%`;
         });
     </script>
 </body>
