@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamified Privacy Policy - 02 - Use of Collected Information</title>
+    <style>
+        /* Body */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        
+        /* Title */
+        .title {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-family: Arial, sans-serif;
+            font-size: 2.5vw; /* Responsive font size */
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* Progress Bar Container (Grey Background) */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px; /* Thicker bar */
+            background-color: grey; /* Grey background */
+            z-index: 200; /* Ensure it appears above other content */
+        }
+        
+        /* Progress Bar (Light Green Indicator) */
+        .progress-bar {
+            width: 0%; /* Start with no progress */
+            height: 100%;
+            background-color: rgba(0, 245, 0, 1); /* Light green progress bar */
+            transition: width 0.3s ease-in-out; /* Smooth progress update */
+        }
+
+        /* Narrative Bubble */
+        .narrative-bubble {
+            position: absolute;
+            top: 8%;
+            left: 2%;
+            width: 20vw;
+            height: 20vh;
+            min-width: 150px;
+            min-height: 100px;
+            max-width: 300px;
+            max-height: 300px;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.4rem;
+            font-family: Arial, sans-serif;
+            color: #333;
+            z-index: 100;
+            text-align: center;
+            overflow: hidden; /* Ensure it doesn't show incomplete text */
+        }
+        
+        /* Text for Typing Effect */
+        .typing-text {
+            white-space: pre-wrap; /* Preserve spaces and line breaks */
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        /* Hidden state for text animation */
+        .narrative-bubble .hidden {
+            visibility: hidden; /* Hide the words initially */
+            opacity: 0; /* Fully transparent */
+            transition: opacity 0.3s ease, visibility 0s 0.3s; /* Smooth fade-in effect */
+        }
+        
+        /* Visible state for animation */
+        .narrative-bubble .visible {
+            visibility: visible; /* Make the words visible */
+            opacity: 1; /* Fully opaque */
+            transition: opacity 0.3s ease; /* Smooth fade-in */
+        }
+
+        /* Narrative Avatar (Integrated into Bubble) */
+        .narrative-avatar {
+            position: absolute; /* Positioned relative to the bubble */
+            bottom: -25px; /* Align at the bottom of the bubble */
+            left: -25px; /* Align at the right of the bubble */
+            width: 50%; /* Dynamic size based on the bubble */
+            max-width: 200px; /* Ensure the avatar doesn't grow too large */
+            max-height: 200px;
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 50%; /* Keep it circular */
+            object-fit: cover; /* Ensure the image scales proportionally */
+            border: none; /* No border around the avatar */
+        }
+
+        /* Media Queries for Small Screens */
+        @media (max-width: 600px) {
+            .narrative-bubble {
+                width: 90%; /* Expand to fit smaller screens */
+                height: auto; /* Allow height to adapt to content */
+                top: 2rem; /* Adjust top positioning for smaller screens */
+                left: 0.5rem; /* Adjust left positioning */
+                padding: 0.8rem; /* Reduce padding slightly */
+                font-size: 0.9rem; /* Adjust font size for readability */
+            }
+
+            .narrative-avatar {
+                width: 60px; /* Smaller avatar size for smaller screens */
+                height: 60px;
+            }
+
+            .instruction-text {
+                bottom: 1rem; /* Closer to the bottom for smaller screens */
+                font-size: 4vw; /* Larger font size for readability */
+            }
+        }
+
+        .instruction-text {
+            position: fixed; /* Fix the text at the bottom of the page */
+            bottom: .4rem; /* Adjust distance from the bottom */
+            left: 50%; /* Center align the text */
+            transform: translateX(-50%); /* Center horizontally */
+            font-size: 3vh; /* Larger font size */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.3); /* Initial transparency */
+            animation: blink 3s infinite ease-in-out; /* Blinking animation */
+            z-index: 100; /* Ensure it stays above other content */
+        }
+
+        /* Blinking Animation */
+        @keyframes blink {
+            0%, 100% {
+                color: rgba(0, 0, 0, 0.3); /* Semi-transparent */
+            }
+            50% {
+                color: rgba(0, 0, 0, 1); /* Fully opaque */
+            }
+        }
+
+        .go-next-button {
+            position: fixed;
+            bottom: 2%; /* Distance from the bottom of the screen */
+            right: 2%; /* Distance from the right of the screen */
+            padding: 0.8rem 1.5rem; /* Adjust padding for size */
+            font-size: 1.2rem; /* Text size */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            color: white; /* Text color */
+            background-color: grey; /* Default button color */
+            border: none; /* Remove borders */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            opacity: 0; /* Start hidden */
+            transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+        }
+        
+        /* Hover effect */
+        .go-next-button:hover {
+            background-color: black; /* Change to black on hover */
+        }
+        
+        /* Show the button */
+        .go-next-button.show {
+            display: block;
+            opacity: 1; /* Fade in */
+        }
+
+        .triangle-animation {
+            position: fixed;
+            bottom: 8%; /* Position above the button */
+            right: 2%; /* Align with the button */
+            display: flex;
+            gap: 0.5rem; /* Spacing between triangles */
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent; /* Adjust for right-pointing triangle */
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid grey; /* Default triangle color pointing right */
+            animation: triangle-blink 0.9s infinite;
+        }
+        
+        .triangle:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .triangle:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .triangle:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes triangle-blink {
+            0%, 100% {
+                border-left-color: grey; /* Grey by default */
+            }
+            50% {
+                border-left-color: black; /* Black when active */
+            }
+        }
+
+        /* Factories Row */
+        .factories-row {
+            display: flex;
+            justify-content: center; /* Center the factories */
+            align-items: center;
+            gap: 1rem; /* Reduce spacing between factories */
+            padding: 1rem 0; /* Reduce vertical padding */
+        }
+        
+        /* Factory Container */
+        .factory {
+            position: relative;
+            width: 250px; /* Increase size of the factory */
+            height: 250px; /* Increase size of the factory */
+            cursor: pointer;
+            transition: transform 0.3s ease; /* Smooth scaling effect */
+        }
+        
+        /* Hover Effect */
+        .factory:hover {
+            transform: scale(1.1); /* Slightly increase size on hover */
+        }
+        
+        /* Factory Images */
+        .factory-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Scale image proportionally */
+        }
+        
+        /* Hidden Images */
+        .hidden {
+            display: none; /* Hide images for future interactions */
+        }
+
+        /* Truck */
+        .truck {
+            position: absolute;
+            width: 360px; /* Larger truck width */
+            height: 280px; /* Larger truck height */
+            background-image: url('./img/02/truck.png'); /* Truck image source */
+            background-size: contain;
+            background-repeat: no-repeat;
+            top: -220px; /* Adjust to center the truck vertically on the path */
+            left: -85px; /* Position at the beginning of the path */
+            transition: left 0.5s ease; /* Smooth movement for future interactions */
+        }
+
+        /* Truck Path */
+        .truck-path {
+            display: flex;
+            justify-content: space-evenly; /* Align toggle icons with factories */
+            align-items: center;
+            top: 200px; /* Adjust width of the path */
+            width: 1300px; /* Adjust width of the path */
+            height: 20px; /* Height of the path */
+            margin: 1rem auto 0; /* Add some spacing below the factories */
+            background-color: #d3d3d3; /* Light gray color for the path */
+            border-radius: 25px; /* Rounded corners */
+            position: relative;
+        }
+        
+        /* Toggle Icons */
+        .toggle-icon {
+            width: 20px; /* Size of the circle */
+            height: 20px; /* Size of the circle */
+            background-color: white; /* Default color */
+            border: 3px solid black; /* Black border */
+            border-radius: 50%; /* Make it circular */
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth transitions */
+        }
+        
+        /* Hover Effect for Toggle Icons */
+        .toggle-icon:hover {
+            transform: scale(1.2); /* Enlarge slightly on hover */
+            background-color: lightgray; /* Change color on hover */
+        }
+
+        /* Bubble Text */
+        .bubble-text {
+            position: absolute;
+            width: auto;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-family: Arial, sans-serif;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            border-radius: 10px;
+            opacity: 1;
+            transform: translate(-50%, -50%); /* Center align the bubble */
+            transition: transform 1s, opacity 0.5s; /* Smooth animation */
+            pointer-events: none; /* Ignore mouse interactions */
+        }
+
+        /* Product Bubble */
+        .product-bubble {
+            width: auto;
+            padding: 1rem 1.5rem; /* Taller bubble */
+            font-size: 2rem; /* Larger text */
+            font-family: Arial, sans-serif;
+            color: white;
+            background-color: rgba(0, 128, 0, 0.8); /* Semi-transparent green */
+            border-radius: 10px;
+            pointer-events: none; /* Ignore mouse interactions */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Title -->
+    <div class="title">Use of Collected Information</div>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar-container" class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Narrative Bubble -->
+    <div class="narrative-bubble">
+        <p id="narrative-text" class="typing-text">This is how we <strong>USE</strong> your <strong>data</strong>...</p>
+        <img src="./img/narritive.png" alt="Narrative Avatar" class="narrative-avatar">
+    </div> 
+
+    <!-- Factories -->
+    <div class="factories-row">
+        <div class="factory" id="factory1">
+            <img src="./img/02/factory_default.png" alt="Factory Default" class="factory-img">
+            <img src="./img/02/factory_produce_1.png" alt="Factory Produce 1" class="factory-img hidden">
+            <img src="./img/02/factory_produce_2.png" alt="Factory Produce 2" class="factory-img hidden">
+            <img src="./img/02/factory_produce_3.png" alt="Factory Produce 3" class="factory-img hidden">
+        </div>
+        <div class="factory" id="factory2">
+            <img src="./img/02/factory_default.png" alt="Factory Default" class="factory-img">
+            <img src="./img/02/factory_produce_1.png" alt="Factory Produce 1" class="factory-img hidden">
+            <img src="./img/02/factory_produce_2.png" alt="Factory Produce 2" class="factory-img hidden">
+            <img src="./img/02/factory_produce_3.png" alt="Factory Produce 3" class="factory-img hidden">
+        </div>
+        <div class="factory" id="factory3">
+            <img src="./img/02/factory_default.png" alt="Factory Default" class="factory-img">
+            <img src="./img/02/factory_produce_1.png" alt="Factory Produce 1" class="factory-img hidden">
+            <img src="./img/02/factory_produce_2.png" alt="Factory Produce 2" class="factory-img hidden">
+            <img src="./img/02/factory_produce_3.png" alt="Factory Produce 3" class="factory-img hidden">
+        </div>
+        <div class="factory" id="factory4">
+            <img src="./img/02/factory_default.png" alt="Factory Default" class="factory-img">
+            <img src="./img/02/factory_produce_1.png" alt="Factory Produce 1" class="factory-img hidden">
+            <img src="./img/02/factory_produce_2.png" alt="Factory Produce 2" class="factory-img hidden">
+            <img src="./img/02/factory_produce_3.png" alt="Factory Produce 3" class="factory-img hidden">
+        </div>
+    </div>
+
+    <!-- Truck Path -->
+    <div class="truck-path">
+        <div id="truck" class="truck"></div> <!-- Truck placed at the beginning -->
+        <div class="toggle-icon" id="toggle1"></div>
+        <div class="toggle-icon" id="toggle2"></div>
+        <div class="toggle-icon" id="toggle3"></div>
+        <div class="toggle-icon" id="toggle4"></div>
+    </div>
+
+    <!-- Instructional Text -->
+    <div class="instruction-text">
+        Click each <strong>"factory"</strong> to deliver <strong>"data"</strong>!
+    </div>
+    
+    <!-- Go Next Button -->
+    <div id="triangle-animation" class="triangle-animation" style="display: none;">
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+    </div>
+    <button id="go-next-button" class="go-next-button">Go Next</button>
+
+
+    <script>
+        const pageProgress = 2; 
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const factories = document.querySelectorAll('.factory');
+            const toggles = document.querySelectorAll('.toggle-icon');
+        
+            toggles.forEach((toggle, index) => {
+                toggle.addEventListener('click', () => {
+                    const factoryId = `factory${index + 1}`;
+                    console.log(`Toggle clicked for ${factoryId}`);
+                    // Placeholder: Logic to handle interaction with the factory
+                });
+            });
+        });
+        
+        // Section Description Text
+        document.addEventListener('DOMContentLoaded', () => {
+            const narrativeText = document.getElementById('narrative-text');
+            const originalContent = narrativeText.innerHTML.trim(); // Capture the original HTML content
+            narrativeText.innerHTML = ''; // Clear the content initially
+        
+            let container = document.createElement('div'); // Temporary container to parse HTML
+            container.innerHTML = originalContent; // Set the content to be parsed
+        
+            const elements = []; // Store elements and text nodes for animation
+        
+            function parseElement(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    // Text node: split into characters
+                    node.textContent.split('').forEach((char) => {
+                        elements.push({
+                            type: 'text',
+                            content: char,
+                        });
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Element node: preserve its structure
+                    const tag = node.tagName.toLowerCase();
+                    const element = {
+                        type: 'element',
+                        tag: tag,
+                        attributes: [...node.attributes].map((attr) => ({
+                            name: attr.name,
+                            value: attr.value,
+                        })),
+                        children: [],
+                    };
+                    elements.push(element);
+        
+                    // Recursively parse child nodes
+                    node.childNodes.forEach((child) => parseElement(child));
+                    elements.push({ type: 'end-element', tag: tag }); // Close the element
+                }
+            }
+        
+            // Parse the original content
+            container.childNodes.forEach((child) => parseElement(child));
+        
+            let index = 0;
+            let currentParent = narrativeText; // Use a variable to track the current parent element
+        
+            function typeNextElement() {
+                if (index < elements.length) {
+                    const current = elements[index];
+        
+                    if (current.type === 'text') {
+                        // Append text character
+                        currentParent.innerHTML += current.content;
+                    } else if (current.type === 'element') {
+                        // Open an HTML tag
+                        const newElement = document.createElement(current.tag);
+                        current.attributes.forEach((attr) =>
+                            newElement.setAttribute(attr.name, attr.value)
+                        );
+                        currentParent.appendChild(newElement);
+                        currentParent = newElement; // Temporarily make it the parent
+                    } else if (current.type === 'end-element') {
+                        // Close the current HTML tag
+                        currentParent = currentParent.parentElement;
+                    }
+        
+                    index++;
+                    setTimeout(typeNextElement, 50); // Adjust delay between characters/elements
+                }
+            }
+        
+            typeNextElement(); // Start the animation
+        });
+
+        // Truck
+        document.addEventListener('DOMContentLoaded', () => {
+            const truck = document.getElementById('truck');
+            const toggles = document.querySelectorAll('.toggle-icon');
+            const factories = document.querySelectorAll('.factory');
+        
+            const truckPositions = [110, 370, 635, 900]; // Corresponding x-values for toggle positions
+        
+            let activeFactory = null; // Track the currently active factory
+            let bubbleInterval = null; // Store the interval for the bubble animation
+            
+            factories.forEach((factory, index) => {
+                factory.addEventListener('click', () => {
+                    // Immediately reset the currently active factory animation and stop bubbles
+                    if (activeFactory && activeFactory !== factory) {
+                        resetFactoryAnimation(activeFactory);
+                        stopBubbleAnimation(); // Stop the bubble animation
+                    }
+            
+                    activeFactory = factory; // Set the clicked factory as active
+            
+                    // Move the truck to the corresponding toggle position
+                    truck.style.left = `${truckPositions[index]}px`;
+            
+                    // Start the factory animation immediately
+                    playFactoryAnimation(factory);
+            
+                    // Start the bubble animation loop
+                    setTimeout(() => {
+                        toggles[index].style.backgroundColor = 'green'; // Turn toggle green
+                        startBubbleAnimation(truck, factory); // Start bubble animation
+                    }, 500); // Delay matches the truck's transition duration (0.5s)
+                });
+            });
+        });
+
+        // Function to play the factory animation
+        function playFactoryAnimation(factory) {
+            const images = [
+                './img/02/factory_produce_1.png',
+                './img/02/factory_produce_2.png',
+                './img/02/factory_produce_3.png'
+            ];
+        
+            let frameIndex = 0;
+            const imgElement = factory.querySelector('.factory-img'); // Get the current factory image
+        
+            const animationInterval = setInterval(() => {
+                imgElement.src = images[frameIndex]; // Change image to the current frame
+                frameIndex = (frameIndex + 1) % images.length; // Loop through frames
+            }, 300); // Adjust frame duration as needed
+        
+            factory.dataset.animationInterval = animationInterval; // Store interval ID for cleanup
+        }
+        
+        // Function to reset the factory animation to default
+        function resetFactoryAnimation(factory) {
+            const imgElement = factory.querySelector('.factory-img'); // Get the current factory image
+            const animationInterval = factory.dataset.animationInterval;
+        
+            if (animationInterval) {
+                clearInterval(animationInterval); // Stop the animation
+                delete factory.dataset.animationInterval; // Remove interval ID
+            }
+        
+            imgElement.src = './img/02/factory_default.png'; // Reset to default image
+        }
+        
+        // Function to start the bubble animation loop
+        function startBubbleAnimation(truck, factory) {
+            // Immediately create and animate the first bubble
+            createAndAnimateBubble(truck, factory);
+        
+            // Start the interval for subsequent bubbles
+            bubbleInterval = setInterval(() => {
+                createAndAnimateBubble(truck, factory);
+            }, 1500); // Create a new bubble every 1.5 seconds
+        }
+        
+        // Function to create and animate a bubble
+        function createAndAnimateBubble(truck, factory) {
+            const bubbleText = document.createElement('div');
+            bubbleText.className = 'bubble-text';
+            bubbleText.innerText = 'Your Data';
+            document.body.appendChild(bubbleText);
+        
+            const truckRect = truck.getBoundingClientRect();
+            const factoryRect = factory.getBoundingClientRect();
+        
+            // Calculate the center position of the truck
+            const truckCenterX = truckRect.left + truckRect.width / 2  - 37;
+            const truckCenterY = truckRect.top + truckRect.height / 2;
+        
+            // Calculate the center position of the factory
+            const factoryCenterX = factoryRect.left + factoryRect.width / 2 - 50;
+            const factoryCenterY = factoryRect.top + factoryRect.height / 2;
+        
+            // Set the initial position of the bubble
+            bubbleText.style.left = `${truckCenterX}px`;
+            bubbleText.style.top = `${truckCenterY}px`;
+        
+            // Animate the bubble toward the factory
+            bubbleText.style.transform = `translate(${factoryCenterX - truckCenterX}px, ${
+                factoryCenterY - truckCenterY
+            }px)`;
+        
+            // When the bubble reaches the factory, create the product bubble
+            setTimeout(() => {
+                bubbleText.remove(); // Remove the data bubble
+                if (!factory.dataset.productGenerated) { // Check if the product is already generated
+                    createProductBubble(factory); // Create the product bubble
+                    factory.dataset.productGenerated = true; // Mark the factory as having generated a product
+                }
+            }, 1500); // Adjust timing to match the animation duration
+        }
+        
+        // Function to stop the bubble animation loop
+        function stopBubbleAnimation() {
+            if (bubbleInterval) {
+                clearInterval(bubbleInterval); // Clear the interval for the bubble animation loop
+                bubbleInterval = null;
+            }
+        
+            // Remove any remaining bubbles
+            const bubbles = document.querySelectorAll('.bubble-text');
+            bubbles.forEach((bubble) => bubble.remove());
+        }
+
+        // Function to create the product bubble at the factory
+        function createProductBubble(factory) {
+            const productNames = {
+                factory1: "Improve Our Services",
+                factory2: "Personalize Content",
+                factory3: "Promotions & Customer Support",
+                factory4: "Legal Compliance"
+            };
+
+            // Check if the factory already has a product bubble
+            if (factory.querySelector('.product-bubble')) {
+                return; // If a product bubble exists, do nothing
+            }
+        
+            const productBubble = document.createElement('div');
+            productBubble.className = 'product-bubble';
+        
+            // Use the unique name for the factory
+            const factoryId = factory.id; // Get the factory's ID
+            productBubble.innerText = productNames[factoryId] || "Default Product"; // Fallback if ID not found
+        
+            // Append the bubble to the factory for relative positioning
+            factory.appendChild(productBubble);
+        
+            // Use relative positioning to keep the product bubble aligned on resize
+            productBubble.style.position = 'absolute';
+            productBubble.style.left = '50%'; // Center horizontally
+            productBubble.style.top = '-20%'; // Position above the factory
+            productBubble.style.transform = 'translate(-50%, -50%)'; // Adjust for perfect centering
+        }
+
+        // Go Next Button
+        document.addEventListener('DOMContentLoaded', () => {
+            const goNextButton = document.getElementById('go-next-button');
+            const triangleAnimation = document.getElementById('triangle-animation');
+            const progressBar = document.getElementById('progress-bar');
+        
+            let visitedFactories = 0; // Track visited factories
+            
+            const checkCompletion = () => {
+                if (visitedFactories === 4) { // All factories visited
+                    goNextButton.classList.add('show'); // Show the button
+                    triangleAnimation.style.display = 'flex'; // Show the triangle animation
+                    progressBar.style.width = `${(pageProgress / 6) * 100}%`; // Update progress bar
+                }
+            };
+        
+            // Update visited factories logic
+            const toggles = document.querySelectorAll('.toggle-icon');
+            toggles.forEach((toggle) => {
+                const observer = new MutationObserver(() => {
+                    if (toggle.style.backgroundColor === 'green') {
+                        visitedFactories++;
+                        observer.disconnect(); // Prevent double counting
+                        checkCompletion(); // Check if all factories are visited
+                    }
+                });
+                observer.observe(toggle, { attributes: true, attributeFilter: ['style'] });
+            });
+        
+            // Add click handler for "Go Next" button
+            goNextButton.addEventListener('click', () => {
+                localStorage.setItem('progressValue', pageProgress);
+                window.location.href = 'gamified-privacy-03.html'; // Navigate to the next page
+            });
+        });
+
+        // Progress bar
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progress-bar');
+            const progressValue = localStorage.getItem('progressValue') || 0; // Default to 0 if not set
+        
+            // Update the progress bar width
+            progressBar.style.width = `${(progressValue/6) * 100}%`;
+        });
+    </script>
+</body>
+</html>

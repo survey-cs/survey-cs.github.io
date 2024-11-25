@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamified Privacy Policy - 03 - Disclosure of Information</title>
+    <style>
+        /* Body */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        
+        /* Title */
+        .title {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-family: Arial, sans-serif;
+            font-size: 2.5vw; /* Responsive font size */
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* Progress Bar Container (Grey Background) */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px; /* Thicker bar */
+            background-color: grey; /* Grey background */
+            z-index: 200; /* Ensure it appears above other content */
+        }
+        
+        /* Progress Bar (Light Green Indicator) */
+        .progress-bar {
+            width: 0%; /* Start with no progress */
+            height: 100%;
+            background-color: rgba(0, 245, 0, 1); /* Light green progress bar */
+            transition: width 0.3s ease-in-out; /* Smooth progress update */
+        }
+
+        /* Narrative Bubble */
+        .narrative-bubble {
+            position: absolute;
+            top: 8%;
+            left: 2%;
+            width: 20vw;
+            height: 20vh;
+            min-width: 150px;
+            min-height: 100px;
+            max-width: 300px;
+            max-height: 300px;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.4rem;
+            font-family: Arial, sans-serif;
+            color: #333;
+            z-index: 100;
+            text-align: center;
+            overflow: hidden; /* Ensure it doesn't show incomplete text */
+        }
+        
+        /* Text for Typing Effect */
+        .typing-text {
+            white-space: pre-wrap; /* Preserve spaces and line breaks */
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        /* Hidden state for text animation */
+        .narrative-bubble .hidden {
+            visibility: hidden; /* Hide the words initially */
+            opacity: 0; /* Fully transparent */
+            transition: opacity 0.3s ease, visibility 0s 0.3s; /* Smooth fade-in effect */
+        }
+        
+        /* Visible state for animation */
+        .narrative-bubble .visible {
+            visibility: visible; /* Make the words visible */
+            opacity: 1; /* Fully opaque */
+            transition: opacity 0.3s ease; /* Smooth fade-in */
+        }
+
+
+        /* Narrative Avatar (Integrated into Bubble) */
+        .narrative-avatar {
+            position: absolute; /* Positioned relative to the bubble */
+            bottom: -25px; /* Align at the bottom of the bubble */
+            left: -25px; /* Align at the right of the bubble */
+            width: 50%; /* Dynamic size based on the bubble */
+            max-width: 200px; /* Ensure the avatar doesn't grow too large */
+            max-height: 200px;
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 50%; /* Keep it circular */
+            object-fit: cover; /* Ensure the image scales proportionally */
+            border: none; /* No border around the avatar */
+        }
+        
+        /* Chest Container */
+        .chest-container {
+            position: relative;
+            width: 30vw; /* Increased chest size */
+            height: 35vw;
+            max-width: 600px; /* Maximum size for chest */
+            max-height: 600px;
+        }
+        
+        .chest {
+            position: absolute;
+            bottom: -35px;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.3s ease;
+        }
+        
+        .chest.default {
+            background-image: url('./img/03/privateDataChest_default.png');
+        }
+        
+        .chest.open {
+            background-image: url('./img/03/privateDataChest_open.png');
+        }
+        
+        .chest.wrong {
+            background-image: url('./img/03/privateDataChest_wrong.png');
+        }
+        
+        /* Chest Description Text */
+        .chest-state-text {
+            bottom: -35px;
+            margin: 0;
+            padding: 0.5rem;
+            font-size: 1.6rem; /* Make the text much larger */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            width: 100%; /* Match the width of the chest-container */
+            margin-bottom: 1rem; /* Add space between the text and the chest */
+        }
+
+        #chest-text {
+            position: absolute;
+            top: 88%;
+            margin: 0;
+            padding: 0.5rem;
+            color: grey;
+            font-size: 1.4rem; /* Make the text much larger */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            width: 100%; /* Match the width of the chest-container */
+            margin-bottom: 1rem; /* Add space between the text and the chest */
+        }
+
+        /* Correct state: Green */
+        .chest-state-text.correct {
+            color: green;
+        }
+        
+        /* Wrong state: Red */
+        .chest-state-text.wrong {
+            color: red;
+        }
+
+        /* Key Container */
+        .key-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.3rem; /* Increased gap between keys */
+            flex-wrap: wrap;
+        }
+        
+        /* Key Wrapper */
+        .key-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Key */
+        .key {
+            width: 16vh; /* Increased key size */
+            height: auto;
+            max-width: 150px; /* Maximum key width */
+            cursor: grab;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Key Label */
+        .key-label {
+            margin-top: 0.5rem;
+            font-size: 22px; /* Responsive font size */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            max-width: 140px; /* Restrict label width */
+            overflow-wrap: break-word; /* Compatibility for older browsers */
+            white-space: normal; /* Allow wrapping */
+            word-break: keep-all; /* Prevent splitting words */
+        }
+        
+        /* Media Query for Smaller Screens */
+        @media (max-width: 600px) {
+            .chest-state-bubble {
+                width: 14rem; /* Adjust width for smaller screens */
+                font-size: 0.9rem; /* Adjust font size */
+                left: 105%; /* Adjust position for smaller screens */
+            }
+        }
+
+        /* Media Queries for Small Screens */
+        @media (max-width: 600px) {
+            .narrative-bubble {
+                width: 90%; /* Expand to fit smaller screens */
+                height: auto; /* Allow height to adapt to content */
+                top: 2rem; /* Adjust top positioning for smaller screens */
+                left: 0.5rem; /* Adjust left positioning */
+                padding: 0.8rem; /* Reduce padding slightly */
+                font-size: 0.9rem; /* Adjust font size for readability */
+            }
+
+            .narrative-avatar {
+                width: 60px; /* Smaller avatar size for smaller screens */
+                height: 60px;
+            }
+
+            .chest-container {
+                width: 35vw;
+                height: 35vw;
+            }
+        
+            #chest-text {
+                position: absolute;
+                top: 88%;
+                margin: 0;
+                color: grey;
+                font-size: 0.6rem; /* Make the text much larger */
+            }
+
+            .key {
+                width: 18vw;
+            }
+        
+            .key-label {
+                max-width: 80px; /* Adjust max-width for smaller screens */
+                font-size: 3vw; /* Adjust font size for readability */
+            }
+        
+            .key-container {
+                gap: 1.5rem; /* Adjust gap for smaller screens */
+            }
+
+            .instruction-text {
+                bottom: 1rem; /* Closer to the bottom for smaller screens */
+                font-size: 4vw; /* Larger font size for readability */
+            }
+        }
+
+        /* On hover of the key-container, make the text fully opaque */
+        .key-container:hover ~ .instruction-text {
+            color: rgba(0, 0, 0, 1); /* Fully opaque text */
+        }
+
+        .instruction-text {
+            position: fixed; /* Fix the text at the bottom of the page */
+            bottom: .4rem; /* Adjust distance from the bottom */
+            left: 50%; /* Center align the text */
+            transform: translateX(-50%); /* Center horizontally */
+            font-size: 3vh; /* Larger font size */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.3); /* Initial transparency */
+            animation: blink 3s infinite ease-in-out; /* Blinking animation */
+            z-index: 100; /* Ensure it stays above other content */
+        }
+
+        /* On hover of the key-container, stop blinking and make text fully opaque */
+        .key-container:hover ~ .instruction-text {
+            animation: none; /* Stop blinking */
+            color: rgba(0, 0, 0, 1); /* Fully opaque text */
+        }
+
+        /* Blinking Animation */
+        @keyframes blink {
+            0%, 100% {
+                color: rgba(0, 0, 0, 0.3); /* Semi-transparent */
+            }
+            50% {
+                color: rgba(0, 0, 0, 1); /* Fully opaque */
+            }
+        }
+
+        .go-next-button {
+            position: fixed;
+            bottom: 2%; /* Distance from the bottom of the screen */
+            right: 2%; /* Distance from the right of the screen */
+            padding: 0.8rem 1.5rem; /* Adjust padding for size */
+            font-size: 1.2rem; /* Text size */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            color: white; /* Text color */
+            background-color: grey; /* Default button color */
+            border: none; /* Remove borders */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            opacity: 0; /* Start hidden */
+            transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+        }
+        
+        /* Hover effect */
+        .go-next-button:hover {
+            background-color: black; /* Change to black on hover */
+        }
+        
+        /* Show the button */
+        .go-next-button.show {
+            display: block;
+            opacity: 1; /* Fade in */
+        }
+
+        .triangle-animation {
+            position: fixed;
+            bottom: 8%; /* Position above the button */
+            right: 2%; /* Align with the button */
+            display: flex;
+            gap: 0.5rem; /* Spacing between triangles */
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent; /* Adjust for right-pointing triangle */
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid grey; /* Default triangle color pointing right */
+            animation: triangle-blink 0.9s infinite;
+        }
+        
+        .triangle:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .triangle:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .triangle:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes triangle-blink {
+            0%, 100% {
+                border-left-color: grey; /* Grey by default */
+            }
+            50% {
+                border-left-color: black; /* Black when active */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title -->
+    <div class="title">Disclosure of Information</div>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar-container" class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Narrative Bubble -->
+    <div class="narrative-bubble">
+        <p id="narrative-text" class="typing-text">In <strong>some</strong> cases, we have to <strong>DISCLOSE</strong> your information...</p>
+        <img src="./img/narritive.png" alt="Narrative Avatar" class="narrative-avatar">
+    </div> 
+
+    <!-- Chest -->
+    <div class="chest-container">
+        <p id="chest-state-text" class="chest-state-text"></p>
+        <div id="chest" class="chest default"></div>
+        <p id="chest-text">Your Private Information</p>
+    </div>
+
+    <!-- Keys -->
+    <div class="key-container">
+        <!-- Incorrect Key -->
+        <div class="key-wrapper" draggable="true">
+            <img src="./img/03/privateDataKey.png" alt="Key" class="key incorrect-key" id="key1" draggable="true">
+            <div class="key-label" id="key-text1">Key 1 Text</div>
+        </div>
+        <!-- Correct Key -->
+        <div class="key-wrapper" draggable="true">
+            <img src="./img/03/privateDataKey.png" alt="Key" class="key correct-key" id="key2" draggable="true">
+            <div class="key-label" id="key-text2">Key 2 Text</div>
+        </div>
+        <!-- Incorrect Key -->
+        <div class="key-wrapper" draggable="true">
+            <img src="./img/03/privateDataKey.png" alt="Key" class="key incorrect-key" id="key3" draggable="true">
+            <div class="key-label" id="key-text3">Key 3 Text</div>
+        </div>
+        <!-- Incorrect Key -->
+        <div class="key-wrapper" draggable="true">
+            <img src="./img/03/privateDataKey.png" alt="Key" class="key incorrect-key" id="key4" draggable="true">
+            <div class="key-label" id="key-text4">Key 4 Text</div>
+        </div>
+        <!-- Correct Key -->
+        <div class="key-wrapper" draggable="true">
+            <img src="./img/03/privateDataKey.png" alt="Key" class="key correct-key" id="key5" draggable="true">
+            <div class="key-label" id="key-text5">Key 5 Text</div>
+        </div>
+        <!-- Incorrect Key -->
+        <div class="key-wrapper" draggable="true">
+            <img src="./img/03/privateDataKey.png" alt="Key" class="key incorrect-key" id="key6" draggable="true">
+            <div class="key-label" id="key-text6">Key 6 Text</div>
+        </div>
+    </div>
+
+    <!-- Instructional Text -->
+    <div class="instruction-text">
+        Drag each <strong>"key"</strong> to see if it can unlock the <strong>"chest"</strong>!
+    </div>
+    
+    <!-- Go Next Button -->
+    <div id="triangle-animation" class="triangle-animation" style="display: none;">
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+    </div>
+    <button id="go-next-button" class="go-next-button">Go Next</button>
+
+
+    <script>
+        const pageProgress = 3; 
+        const chest = document.getElementById('chest');
+        const chestStateText = document.getElementById('chest-state-text');
+        const keys = document.querySelectorAll('.key');
+        const keyWrappers = document.querySelectorAll('.key-wrapper');
+
+        // Text binding for each key
+        const keyTexts = {
+            key1: 'Commerce',
+            key2: 'By Legal Requirement',
+            key3: 'Your Partner Wants It',
+            key4: 'Our Boss Wants It',
+            key5: 'To Protect Your Rights',
+            key6: 'Sell to Scammers',
+        };
+
+        // Unique messages for each key
+        const keyMessages = {
+            key1: 'No commercial use can break your privacy.',
+            key2: 'Legal access that required by law.',
+            key3: 'No one can do that, even someone close to you.',
+            key4: 'No one can do that, even our boss!',
+            key5: 'We have to safeguard your rights.',
+            key6: 'We will never sell to scammers!',
+        };
+
+        // Chest state messages
+        const chestStates = {
+            correct: 'The.',
+            wrong: 'Thi.',
+        };
+
+        keys.forEach((key) => {
+            const keyId = key.id;
+            const keyTextElement = document.getElementById(`key-text${keyId.slice(-1)}`); // Match key-text by ID
+    
+            // Bind unique text
+            if (keyTextElement) {
+                keyTextElement.textContent = keyTexts[keyId];
+    
+                // Add hover effects for text bolding
+                key.addEventListener('mouseenter', () => {
+                    keyTextElement.style.fontWeight = 'bold';
+                });
+    
+                key.addEventListener('mouseleave', () => {
+                    keyTextElement.style.fontWeight = 'normal';
+                });
+            }
+    
+            key.addEventListener('mouseenter', () => {
+                key.style.transition = 'transform 0.3s ease';
+                key.style.transform = 'translateY(-10px)';
+            });
+    
+            key.addEventListener('mouseleave', () => {
+                key.style.transition = 'transform 0.3s ease';
+                key.style.transform = 'translateY(0)';
+            });
+    
+            // Drag and drop events
+            key.addEventListener('dragstart', (e) => {
+                const keyType = key.classList.contains('correct-key') ? 'correct' : 'wrong';
+    
+                e.dataTransfer.setData('text', keyType);
+                e.dataTransfer.setData('keyId', keyId);
+            });
+        });
+    
+        chest.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Allow drop
+        });
+    
+        chest.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const keyType = e.dataTransfer.getData('text');
+            const keyId = e.dataTransfer.getData('keyId');
+            const keyElement = document.getElementById(keyId);
+            const keyTextElement = document.getElementById(`key-text${keyId.slice(-1)}`); // Match key-text by ID
+    
+            // Show chest state text
+            chestStateText.style.display = 'block'; // Make the text visible
+            chestStateText.textContent = keyMessages[keyId]; // Combine key-specific and state-specific messages
+            chestStateText.className = `chest-state-text ${keyType}`; // Apply green or red styling
+
+            // Change chest state based on key type
+            if (keyType === 'correct') {
+                chest.className = 'chest open';
+                keyElement.src = './img/03/privateDataKey_correct.png'; // Change image for correct key
+                if (keyTextElement) keyTextElement.style.color = 'green'; // Change text color to green
+            } else if (keyType === 'wrong') {
+                chest.className = 'chest wrong';
+                keyElement.src = './img/03/privateDataKey_wrong.png'; // Change image for wrong key
+                if (keyTextElement) keyTextElement.style.color = 'red'; // Change text color to red
+            }
+
+            // Reset key position visually (simulate snap back)
+            keyElement.style.transition = 'transform 0.2s ease';
+            keyElement.style.transform = 'translate(0, 0)';
+        });
+
+        // Section Description Text
+        document.addEventListener('DOMContentLoaded', () => {
+            const narrativeText = document.getElementById('narrative-text');
+            const originalContent = narrativeText.innerHTML.trim(); // Capture the original HTML content
+            narrativeText.innerHTML = ''; // Clear the content initially
+        
+            let container = document.createElement('div'); // Temporary container to parse HTML
+            container.innerHTML = originalContent; // Set the content to be parsed
+        
+            const elements = []; // Store elements and text nodes for animation
+        
+            function parseElement(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    // Text node: split into characters
+                    node.textContent.split('').forEach((char) => {
+                        elements.push({
+                            type: 'text',
+                            content: char,
+                        });
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Element node: preserve its structure
+                    const tag = node.tagName.toLowerCase();
+                    const element = {
+                        type: 'element',
+                        tag: tag,
+                        attributes: [...node.attributes].map((attr) => ({
+                            name: attr.name,
+                            value: attr.value,
+                        })),
+                        children: [],
+                    };
+                    elements.push(element);
+        
+                    // Recursively parse child nodes
+                    node.childNodes.forEach((child) => parseElement(child));
+                    elements.push({ type: 'end-element', tag: tag }); // Close the element
+                }
+            }
+        
+            // Parse the original content
+            container.childNodes.forEach((child) => parseElement(child));
+        
+            let index = 0;
+            let currentParent = narrativeText; // Use a variable to track the current parent element
+        
+            function typeNextElement() {
+                if (index < elements.length) {
+                    const current = elements[index];
+        
+                    if (current.type === 'text') {
+                        // Append text character
+                        currentParent.innerHTML += current.content;
+                    } else if (current.type === 'element') {
+                        // Open an HTML tag
+                        const newElement = document.createElement(current.tag);
+                        current.attributes.forEach((attr) =>
+                            newElement.setAttribute(attr.name, attr.value)
+                        );
+                        currentParent.appendChild(newElement);
+                        currentParent = newElement; // Temporarily make it the parent
+                    } else if (current.type === 'end-element') {
+                        // Close the current HTML tag
+                        currentParent = currentParent.parentElement;
+                    }
+        
+                    index++;
+                    setTimeout(typeNextElement, 50); // Adjust delay between characters/elements
+                }
+            }
+        
+            typeNextElement(); // Start the animation
+        });
+
+        // Go Next Button
+        document.addEventListener('DOMContentLoaded', () => {
+            const chest = document.getElementById('chest');
+            const goNextButton = document.getElementById('go-next-button');
+            const triangleAnimation = document.getElementById('triangle-animation');
+            const keys = document.querySelectorAll('.key');
+            const triedKeys = new Set(); // To track keys that have been tried
+        
+            // Drag and drop events
+            keys.forEach((key) => {
+                key.addEventListener('dragstart', (e) => {
+                    const keyId = key.id;
+                    e.dataTransfer.setData('keyId', keyId);
+                });
+            });
+        
+            chest.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Allow drop
+            });
+        
+            chest.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const keyId = e.dataTransfer.getData('keyId');
+                const progressBar = document.getElementById('progress-bar');
+                triedKeys.add(keyId); // Add the key to the tried set
+        
+                // Check if all six keys have been tried
+                if (triedKeys.size === keys.length) {
+                    goNextButton.classList.add('show'); // Show the button
+                    triangleAnimation.style.display = 'flex'; // Show the triangle animation
+                    progressBar.style.width = `${(pageProgress/6) * 100}%`;
+                }
+            });
+        
+            // Add click handler for "Go Next" button
+            goNextButton.addEventListener('click', () => {
+                localStorage.setItem('progressValue', pageProgress);
+                window.location.href = 'gamified-privacy-04.html'; // Navigate to the next page
+            });
+        });
+
+        // Progress bar
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progress-bar');
+            const progressValue = localStorage.getItem('progressValue') || 0; // Default to 0 if not set
+        
+            // Update the progress bar width
+            progressBar.style.width = `${(progressValue/6) * 100}%`;
+        });
+    </script>
+</body>
+</html>
