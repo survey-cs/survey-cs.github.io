@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag and Drop Icons</title>
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            height: 250px; /* Square card */
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .info-card img {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+        }
+        .info-card p {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 10px;
+            flex: 1;
+            /* Removed align-items: center; */
+            display: flex;
+            justify-content: center;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center vertically */
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .icon-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center horizontally */
+            margin: 20px auto;
+            width: 80%;
+        }
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            padding: 10px;
+            background-color: #eee;
+            text-align: center;
+            cursor: move;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon i {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .icon-label {
+            font-size: 14px;
+        }
+        .drop-box-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center horizontally */
+            width: 75%;
+            margin: 0 auto;
+        }
+        .drop-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 48%;
+            min-height: 200px;
+            padding: 10px;
+            margin: 10px; /* Add margin for spacing between boxes */
+            background-color: #f9f9f9;
+            border: 2px dashed #bbb;
+            box-sizing: border-box;
+        }
+        .drop-box h3 {
+            width: 100%;
+            text-align: center;
+            margin-top: 0;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-1px, -2px) rotate(-1deg); }
+            40% { transform: translate(-3px, 0px) rotate(1deg); }
+            60% { transform: translate(3px, 2px) rotate(0deg); }
+            80% { transform: translate(1px, -1px) rotate(1deg); }
+            100% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
+        .highlight-incorrect {
+            background-color: #f8d7da;
+            border-color: red;
+        }
+        .highlight-correct {
+            background-color: #d4edda;
+            border-color: green;
+        }
+        #check-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #check-button:hover {
+            background-color: #ddd;
+        }
+        #instructions {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #fff;
+        }
+        #next-button {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #next-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="info-card">
+        <p>These are the types of data we are collecting</p>
+        <img src=".img/narrative.png" alt="Cat">
+    </div>
+
+    <div class="main-content">
+        <div class="icon-container" id="icon-container">
+            <!-- Icon 1: Location -->
+            <div class="icon" draggable="true" data-id="1">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="icon-label">Location</div>
+            </div>
+            <!-- Icon 2: Name -->
+            <div class="icon" draggable="true" data-id="2">
+                <i class="fas fa-user"></i>
+                <div class="icon-label">Name</div>
+            </div>
+            <!-- Icon 3: Email -->
+            <div class="icon" draggable="true" data-id="3">
+                <i class="fas fa-envelope"></i>
+                <div class="icon-label">Email</div>
+            </div>
+            <!-- Icon 4: Phone Number -->
+            <div class="icon" draggable="true" data-id="4">
+                <i class="fas fa-phone"></i>
+                <div class="icon-label">Phone Number</div>
+            </div>
+            <!-- Icon 5: Age -->
+            <div class="icon" draggable="true" data-id="5">
+                <i class="fas fa-birthday-cake"></i>
+                <div class="icon-label">Age</div>
+            </div>
+            <!-- Icon 6: Social Security -->
+            <div class="icon" draggable="true" data-id="6">
+                <i class="fas fa-id-card"></i>
+                <div class="icon-label">Social Security</div>
+            </div>
+        </div>
+
+        <div class="drop-box-container">
+            <div class="drop-box" id="box1">
+                <h3>Data We Collect</h3>
+            </div>
+            <div class="drop-box" id="box2">
+                <h3>Data We Don't Collect</h3>
+            </div>
+        </div>
+
+        <button id="check-button">Check</button>
+    </div>
+
+    <div id="instructions">Drag the icons into the two categories</div>
+
+    <button id="next-button">Next</button>
+
+    <script>
+        // Data: define which icons belong to which boxes
+        const correctAssignment = {
+            box1: ['2', '3', '4', '5'], // Name, Email, Phone Number, Age
+            box2: ['1', '6']  // Location, Social Security
+        };
+
+        // Drag and Drop functionality
+        const icons = document.querySelectorAll('.icon');
+        icons.forEach(icon => {
+            icon.addEventListener('dragstart', dragStart);
+        });
+
+        const boxes = document.querySelectorAll('.drop-box');
+        boxes.forEach(box => {
+            box.addEventListener('dragover', dragOver);
+            box.addEventListener('drop', drop);
+        });
+
+        const iconContainer = document.getElementById('icon-container');
+        iconContainer.addEventListener('dragover', dragOver);
+        iconContainer.addEventListener('drop', drop);
+
+        function dragStart(e) {
+            const target = e.target.closest('.icon');
+            e.dataTransfer.setData('text/plain', target.dataset.id);
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const draggedElement = document.querySelector(`.icon[data-id='${id}']`);
+
+            // Remove the element from its current parent
+            if (draggedElement && draggedElement.parentNode) {
+                draggedElement.parentNode.removeChild(draggedElement);
+            }
+
+            // Remove highlight classes
+            draggedElement.classList.remove('highlight-incorrect', 'highlight-correct');
+
+            // Append the icon to the new container
+            e.currentTarget.appendChild(draggedElement);
+        }
+
+        // Check button functionality
+        const checkButton = document.getElementById('check-button');
+        checkButton.addEventListener('click', checkBoxes);
+
+        function checkBoxes() {
+            let allCorrect = true;
+            ['box1', 'box2'].forEach(boxId => {
+                const box = document.getElementById(boxId);
+                const iconsInBox = box.querySelectorAll('.icon');
+                iconsInBox.forEach(icon => {
+                    const correctIds = correctAssignment[boxId];
+                    // Remove previous highlights
+                    icon.classList.remove('highlight-incorrect', 'highlight-correct', 'shake');
+                    if (correctIds.includes(icon.dataset.id)) {
+                        // Correct item
+                        icon.classList.add('shake', 'highlight-correct');
+                    } else {
+                        // Incorrect item
+                        icon.classList.add('shake', 'highlight-incorrect');
+                        allCorrect = false;
+                    }
+                    setTimeout(() => {
+                        icon.classList.remove('shake');
+                    }, 500);
+                });
+            });
+            // Show the Next button if check has been clicked
+            const nextButton = document.getElementById('next-button');
+            nextButton.style.display = 'block';
+        }
+
+        // Next button functionality
+        const nextButton = document.getElementById('next-button');
+        nextButton.addEventListener('click', () => {
+            // Navigate to the next page
+            window.location.href = 'gamified-privacy-02.html';
+        });
+    </script>
+</body>
+</html>

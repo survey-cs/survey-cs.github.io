@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Build a Fortress</title>
+    <!-- Include Font Awesome for icons (if needed) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 36px;
+            color: #333;
+        }
+        .info-card {
+            position: absolute;
+            top: 80px; /* Adjusted to be below the title */
+            left: 20px;
+            width: 250px;
+            height: 250px; /* Square card */
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .info-card img {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+        }
+        .info-card p {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Left side with draggable castle walls */
+        .left-panel {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .castle-wall-container {
+            margin-bottom: 10px;
+            cursor: move;
+        }
+        .castle-wall-piece {
+            width: 200px;
+            height: 250px;
+            background-image: url('./img/castle.png');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #ccc;
+        }
+        .wall-text {
+            margin-top: 5px;
+            text-align: center;
+            font-weight: bold;
+            width: 200px;
+        }
+        /* Right side with slots and crossbows */
+        .right-panel {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .slots-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px; /* Increased spacing between slots and crossbows */
+        }
+        .slot {
+            width: 200px;
+            height: 350px; /* Increased height to accommodate text */
+            margin: 0 10px;
+            border: 2px dashed #bbb;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+        .crossbows-container {
+            display: flex;
+            justify-content: center;
+        }
+        .crossbow {
+            width: 100px;
+            height: 100px;
+            margin: 0 60px;
+            background-image: url('./img/crossbow.png');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Animation for bouncing crossbows */
+        .bounce {
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        #instructions {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #fff;
+        }
+        #next-button {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #next-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Build a Fortress!</h1>
+
+    <div class="info-card">
+        <p>This is how we protect your data</p>
+        <img src="./img/narrative.png" alt="Narrative">
+    </div>
+
+    <div class="main-content">
+        <!-- Left Panel with draggable castle walls -->
+        <div class="left-panel">
+            <!-- Draggable castle wall pieces with text -->
+            <div class="castle-wall-container" draggable="true" data-id="1">
+                <div class="castle-wall-piece"></div>
+                <div class="wall-text">Data Encryption</div>
+            </div>
+            <div class="castle-wall-container" draggable="true" data-id="2">
+                <div class="castle-wall-piece"></div>
+                <div class="wall-text">Security Assessments and Updates</div>
+            </div>
+            <div class="castle-wall-container" draggable="true" data-id="3">
+                <div class="castle-wall-piece"></div>
+                <div class="wall-text">Restricted Access</div>
+            </div>
+        </div>
+        <!-- Right Panel with slots and crossbows -->
+        <div class="right-panel">
+            <!-- Slots for dropping castle wall pieces -->
+            <div class="slots-container">
+                <div class="slot" data-id="1"></div>
+                <div class="slot" data-id="2"></div>
+                <div class="slot" data-id="3"></div>
+            </div>
+            <!-- Crossbows aligned with slots -->
+            <div class="crossbows-container">
+                <div class="crossbow"></div>
+                <div class="crossbow"></div>
+                <div class="crossbow"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="instructions">Build a fortress, once the fortress is properly built all attacks will be blocked.</div>
+
+    <button id="next-button">Next</button>
+
+    <script>
+        // Drag and Drop functionality
+        const wallContainers = document.querySelectorAll('.castle-wall-container');
+        wallContainers.forEach(container => {
+            container.addEventListener('dragstart', dragStart);
+        });
+
+        const slots = document.querySelectorAll('.slot');
+        slots.forEach(slot => {
+            slot.addEventListener('dragover', dragOver);
+            slot.addEventListener('drop', drop);
+        });
+
+        function dragStart(e) {
+            const target = e.target.closest('.castle-wall-container');
+            e.dataTransfer.setData('text/plain', target.dataset.id);
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const draggedElement = document.querySelector(`.castle-wall-container[data-id='${id}']`);
+
+            // Prevent placing more than one piece in a slot
+            if (e.currentTarget.children.length === 0) {
+                // Remove the element from its current parent
+                if (draggedElement && draggedElement.parentNode) {
+                    draggedElement.parentNode.removeChild(draggedElement);
+                }
+
+                // Append the wall container to the slot
+                e.currentTarget.appendChild(draggedElement);
+
+                checkSlotsFilled();
+            }
+        }
+
+        function checkSlotsFilled() {
+            const slots = document.querySelectorAll('.slot');
+            let allFilled = true;
+            slots.forEach(slot => {
+                if (slot.children.length === 0) {
+                    allFilled = false;
+                }
+            });
+            if (allFilled) {
+                // Show the Next button
+                const nextButton = document.getElementById('next-button');
+                nextButton.style.display = 'block';
+
+                // Make the crossbows bounce
+                const crossbows = document.querySelectorAll('.crossbow');
+                crossbows.forEach(crossbow => {
+                    crossbow.classList.add('bounce');
+                });
+            }
+        }
+
+        // Next button functionality
+        const nextButton = document.getElementById('next-button');
+        nextButton.addEventListener('click', () => {
+            // Navigate to the next page (update the filename as needed)
+            window.location.href = 'gamified-privacy-03.html';
+        });
+    </script>
+</body>
+</html>
