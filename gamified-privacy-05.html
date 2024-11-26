@@ -641,6 +641,7 @@
         function ShowGoNextButton(){
             goNextButton.classList.add('show'); // Show the button
             triangleAnimation.style.display = 'flex'; // Show the triangle animation
+            localStorage.setItem('progressValue', pageProgress);
         }
 
         function UpdateProgress(progressVal) {

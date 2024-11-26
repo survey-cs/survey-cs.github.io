@@ -805,7 +805,7 @@
             // Add click handler for "Go Next" button
             goNextButton.addEventListener('click', () => {
                 localStorage.setItem('progressValue', pageProgress);
-                window.location.href = 'gamified-privacy-end.html'; // Navigate to the next page
+                window.location.href = 'gamified-next.html'; // Navigate to the next page
             });
         });
 
@@ -818,6 +818,7 @@
         function ShowGoNextButton(){
             goNextButton.classList.add('show'); // Show the button
             triangleAnimation.style.display = 'flex'; // Show the triangle animation
+            localStorage.setItem('progressValue', pageProgress);
         }
 
         function UpdateProgress(progressVal) {

@@ -37,6 +37,7 @@ if (signupForm) {
 
             // Redirect to privacy policy page
             window.location.href = 'gamified-privacy-01.html';
+            localStorage.setItem('progressValue', 0);
         }, 1000); // 1 second delay
     });
 }
