@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamified Privacy Policy - 06 - Your Rights</title>
+    <style>
+        /* Body */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        
+        /* Title */
+        .title {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-family: Arial, sans-serif;
+            font-size: 2.5vw; /* Responsive font size */
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* Progress Bar Container (Grey Background) */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px; /* Thicker bar */
+            background-color: grey; /* Grey background */
+            z-index: 200; /* Ensure it appears above other content */
+        }
+        
+        /* Progress Bar (Light Green Indicator) */
+        .progress-bar {
+            width: 0%; /* Start with no progress */
+            height: 100%;
+            background-color: rgba(0, 245, 0, 1); /* Light green progress bar */
+            transition: width 0.3s ease-in-out; /* Smooth progress update */
+        }
+
+        /* Narrative Bubble */
+        .narrative-bubble {
+            position: absolute;
+            top: 8%;
+            left: 2%;
+            width: 20vw;
+            height: 20vh;
+            min-width: 150px;
+            min-height: 100px;
+            max-width: 300px;
+            max-height: 300px;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.4rem;
+            font-family: Arial, sans-serif;
+            color: #333;
+            z-index: 100;
+            text-align: center;
+            overflow: hidden; /* Ensure it doesn't show incomplete text */
+        }
+        
+        /* Text for Typing Effect */
+        .typing-text {
+            white-space: pre-wrap; /* Preserve spaces and line breaks */
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        /* Hidden state for text animation */
+        .narrative-bubble .hidden {
+            visibility: hidden; /* Hide the words initially */
+            opacity: 0; /* Fully transparent */
+            transition: opacity 0.3s ease, visibility 0s 0.3s; /* Smooth fade-in effect */
+        }
+        
+        /* Visible state for animation */
+        .narrative-bubble .visible {
+            visibility: visible; /* Make the words visible */
+            opacity: 1; /* Fully opaque */
+            transition: opacity 0.3s ease; /* Smooth fade-in */
+        }
+
+        /* Narrative Avatar (Integrated into Bubble) */
+        .narrative-avatar {
+            position: absolute; /* Positioned relative to the bubble */
+            bottom: -25px; /* Align at the bottom of the bubble */
+            left: -25px; /* Align at the right of the bubble */
+            width: 50%; /* Dynamic size based on the bubble */
+            max-width: 200px; /* Ensure the avatar doesn't grow too large */
+            max-height: 200px;
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 50%; /* Keep it circular */
+            object-fit: cover; /* Ensure the image scales proportionally */
+            border: none; /* No border around the avatar */
+        }
+
+        /* Media Queries for Small Screens */
+        @media (max-width: 600px) {
+            .narrative-bubble {
+                width: 90%; /* Expand to fit smaller screens */
+                height: auto; /* Allow height to adapt to content */
+                top: 2rem; /* Adjust top positioning for smaller screens */
+                left: 0.5rem; /* Adjust left positioning */
+                padding: 0.8rem; /* Reduce padding slightly */
+                font-size: 0.9rem; /* Adjust font size for readability */
+            }
+
+            .narrative-avatar {
+                width: 60px; /* Smaller avatar size for smaller screens */
+                height: 60px;
+            }
+
+            .instruction-text {
+                bottom: 1rem; /* Closer to the bottom for smaller screens */
+                font-size: 4vw; /* Larger font size for readability */
+            }
+        }
+
+        .instruction-text {
+            position: fixed; /* Fix the text at the bottom of the page */
+            bottom: .4rem; /* Adjust distance from the bottom */
+            left: 50%; /* Center align the text */
+            transform: translateX(-50%); /* Center horizontally */
+            font-size: 3vh; /* Larger font size */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.3); /* Initial transparency */
+            animation: blink 3s infinite ease-in-out; /* Blinking animation */
+            z-index: 100; /* Ensure it stays above other content */
+        }
+
+        /* Blinking Animation */
+        @keyframes blink {
+            0%, 100% {
+                color: rgba(0, 0, 0, 0.3); /* Semi-transparent */
+            }
+            50% {
+                color: rgba(0, 0, 0, 1); /* Fully opaque */
+            }
+        }
+
+        .go-next-button {
+            position: fixed;
+            bottom: 2%; /* Distance from the bottom of the screen */
+            right: 2%; /* Distance from the right of the screen */
+            padding: 0.8rem 1.5rem; /* Adjust padding for size */
+            font-size: 1.2rem; /* Text size */
+            font-weight: bold; /* Bold text */
+            font-family: Arial, sans-serif;
+            color: white; /* Text color */
+            background-color: grey; /* Default button color */
+            border: none; /* Remove borders */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            opacity: 0; /* Start hidden */
+            transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+        }
+        
+        /* Hover effect */
+        .go-next-button:hover {
+            background-color: black; /* Change to black on hover */
+        }
+        
+        /* Show the button */
+        .go-next-button.show {
+            display: block;
+            opacity: 1; /* Fade in */
+        }
+
+        .triangle-animation {
+            position: fixed;
+            bottom: 8%; /* Position above the button */
+            right: 2%; /* Align with the button */
+            display: flex;
+            gap: 0.5rem; /* Spacing between triangles */
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent; /* Adjust for right-pointing triangle */
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid grey; /* Default triangle color pointing right */
+            animation: triangle-blink 0.9s infinite;
+        }
+        
+        .triangle:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .triangle:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .triangle:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes triangle-blink {
+            0%, 100% {
+                border-left-color: grey; /* Grey by default */
+            }
+            50% {
+                border-left-color: black; /* Black when active */
+            }
+        }
+
+        /* TODO */
+        /* Progress Panel */
+        .progress-panel {
+            position: absolute;
+            left: 2%; /* Center-left positioning */
+            top: 65%; /* Centered vertically */
+            transform: translateY(-50%);
+            width: 23%;
+            max-width: 400px;
+            background-color: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 150;
+        }
+
+        /* Progress List */
+        .progress-list {
+            position: relative;
+            padding: 1rem 0;
+        }
+        
+        /* Vertical Strip */
+        .progress-list::before {
+            content: '';
+            position: absolute;
+            left: 10px; /* Align with circle centers */
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #ccc; /* Grey strip */
+            z-index: 0;
+        }
+
+        /* Progress Item */
+        .progress-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem; /* Space between items */
+        }
+        
+        .progress-item:last-child {
+            margin-bottom: 0; /* Remove spacing for the last item */
+        }
+        
+        /* Progress Circle */
+        .progress-circle {
+            position: relative;
+            z-index: 1; /* Ensure it stays above the strip */
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc; /* Grey border */
+            border-radius: 50%; /* Make it circular */
+            background-color: white;
+            margin-right: 1rem; /* Space between circle and text */
+        }
+        
+        /* Progress Text */
+        .progress-text {
+            font-size: 1.3rem;
+            font-family: Arial, sans-serif;
+            font-style: bold;
+            color: #333;
+        }
+
+        /* Main Title */
+        .main-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3rem;
+            font-family: Arial, sans-serif;
+            word-wrap: break-word; /* Break words if needed */
+            overflow-wrap: break-word; /* Ensure compatibility with different browsers */
+            width: 50%; /* Limit the width of the text container */
+            max-width: 800px; /* Set a maximum width for larger screens */
+            margin: 0 auto; /* Center-align the title */
+        }
+        
+        /* Triangle Container */
+        .triangle-container {
+            position: relative;
+            right: 10%; /* Adjust for layout */
+            top: 5%; /* Center vertically */
+            width: 700px; /* Increased width for spacing */
+            height: 600px; /* Increased height for the triangle layout */
+            display: flex;
+        }
+        
+        /* Triangle Nodes */
+        .triangle-node {
+            position: absolute;
+            text-align: center;
+        }
+        
+        /* Node Positions */
+        .node-top-center {
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
+        
+        .node-top-right {
+            top: 0;
+            right: 0;
+            transform: translate(0, 0);
+        }
+        
+        .node-bottom-center {
+            top: 250px;
+            left: 51%;
+            transform: translate(-50%, 0);
+        }
+        
+        /* Node Titles */
+        .triangle-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Node Icons */
+        .triangle-icon {
+            width: 150px; /* Fixed size for icons */
+            height: auto;
+        }
+        
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            height: 8px;
+            background-color: #333; /* Arrow line color */
+        }
+        
+        /* Arrows Between Your Data and Our Database */
+        .arrow-to-database {
+            top: 120px;
+            left: 58%;
+            width: 26%; /* Adjust length to match distance */
+            transform: translateX(-10%);
+        }
+        
+        .arrow-to-database::after {
+            content: '';
+            position: absolute;
+            right: -3%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-left-color: #333; /* Right-facing arrowhead */
+            transform: translate(50%, -25%);
+        }
+        
+        .arrow-from-database {
+            top: 140px;
+            left: 53%;
+            width: 26%; /* Adjust length to match distance */
+            transform: translateX(10%);
+        }
+        
+        .arrow-from-database::before {
+            content: '';
+            position: absolute;
+            left: -3%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-right-color: #333; /* Left-facing arrowhead */
+            transform: translate(-50%, -28%);
+        }
+        
+        /* Arrow Between Your Data and Bin */
+        .arrow-to-bin {
+            top: 170px;
+            left: 50%;
+            width: 8px; /* Vertical line */
+            height: 100px; /* Adjust height to reach bin */
+            background-color: #333;
+        }
+        
+        .arrow-to-bin::after {
+            content: '';
+            position: absolute;
+            bottom: -20px; /* Arrowhead at bottom */
+            left: 50%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: #333; /* Downward-facing arrowhead */
+            transform: translateX(-50%);
+        }
+        
+        /* Acknowledge Button */
+        .acknowledge-button {
+            position: absolute;
+            bottom: 15%;
+            margin-top: 2rem; /* Space below the triangle */
+            padding: 1rem 2rem; /* Size of the button */
+            font-size: 1.2rem; /* Larger text size */
+            font-weight: bold;
+            background-color: #007bff; /* Blue background */
+            color: white; /* White text */
+            border: none; /* Remove default border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        
+        .acknowledge-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Section 2 Styling */
+        .section-2-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2rem;
+            font-family: Arial, sans-serif;
+            position: absolute;
+            top: 20%; /* Position above the icons */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Icon Container */
+        .icon-container {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%);
+            width: 300px; /* Adjust for icon alignment */
+            height: 300px; /* Make space for all icons */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Shelf Icon */
+        .shelf-icon {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            z-index: 1; /* Ensure it is beneath the ban icon */
+        }
+        
+        /* Book Icon */
+        .book-icon {
+            position: absolute;
+            top: 20%; /* Position book in the top-left of the shelf */
+            left: 25%;
+            width: 100px;
+            height: auto;
+            z-index: 2; /* Ensure it is above the shelf */
+        }
+        
+        /* Transparent Red Ban Icon */
+        .ban-icon {
+            position: absolute;
+            top: 50%; /* Center in container */
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg); /* Center and rotate */
+            width: 240px;
+            height: 240px;
+            border: 10px solid rgba(255, 0, 0, 0.6); /* Transparent red border */
+            border-radius: 50%; /* Circle */
+            z-index: 3; /* Ensure it is above both icons */
+        }
+        
+        .ban-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 10px; /* Thickness of the diagonal line */
+            background-color: rgba(255, 0, 0, 0.6); /* Transparent red color */
+            transform: translateY(-50%) rotate(90deg); /* Rotate the diagonal line */
+        }
+
+        /* Section 3 Styling */
+        .section-3-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2rem;
+            font-family: Arial, sans-serif;
+            position: absolute;
+            top: 20%; /* Position above the contact icon */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Icon Container */
+        .icon-container {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Contact Icon */
+        .contact-icon {
+            width: 200px; /* Adjust icon size */
+            height: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Title -->
+    <div class="title">Your Rights</div>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar-container" class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Narrative Bubble -->
+    <div class="narrative-bubble">
+        <p id="narrative-text" class="typing-text">Review and claim your <strong>RIGHTS</strong>!</p>
+        <img src="./img/narritive.png" alt="Narrative Avatar" class="narrative-avatar">
+    </div> 
+
+    <!-- TODO -->
+    <!-- Vertical Progress List -->
+    <div class="progress-panel">
+        <div class="progress-list">
+            <div class="progress-item">
+                <div class="progress-circle"></div>
+                <p class="progress-text">Step 1: Supervise your data</p>
+            </div>
+            <div class="progress-item">
+                <div class="progress-circle"></div>
+                <p class="progress-text">Step 2: Control data processing</p>
+            </div>
+            <div class="progress-item">
+                <div class="progress-circle"></div>
+                <p class="progress-text">Step 3: Contact us</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 1 -->
+    <div id="section-1" class="section">
+        <!-- Main Title -->
+        <h1 class="main-title section-1-title">
+            You have the right to access, correct, or delete your data held by us.
+        </h1>
+    
+        <!-- Triangle Container -->
+        <div class="triangle-container">
+            <!-- Top Center Node -->
+            <div class="triangle-node node-top-center">
+                <h2 class="triangle-title">Your Data</h2>
+                <img src="./img/06/book.png" alt="Book Icon" class="triangle-icon">
+            </div>
+    
+            <!-- Top Right Node -->
+            <div class="triangle-node node-top-right">
+                <h2 class="triangle-title">Our Database</h2>
+                <img src="./img/06/shelf.png" alt="Shelf Icon" class="triangle-icon">
+            </div>
+    
+            <!-- Bottom Center Node -->
+            <div class="triangle-node node-bottom-center">
+                <img src="./img/06/bin.png" alt="Bin Icon" class="triangle-icon">
+            </div>
+    
+            <!-- Arrows -->
+            <div class="arrow arrow-to-database"></div> <!-- From Your Data to Our Database -->
+            <div class="arrow arrow-from-database"></div> <!-- From Our Database to Your Data -->
+            <div class="arrow arrow-to-bin"></div> <!-- From Your Data to Bin -->
+        </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div id="section-2" class="section" style="display: none;">
+        <!-- Main Title -->
+        <h1 class="main-title section-2-title">
+            You may object to processing of your data, or put restrictions on such processing.
+        </h1>
+    
+        <!-- Icon Combination: Book + Shelf + Ban Icon -->
+        <div class="icon-container">
+            <img src="./img/06/shelf.png" alt="Shelf Icon" class="shelf-icon">
+            <img src="./img/06/book.png" alt="Book Icon" class="book-icon">
+            <div class="ban-icon"></div>
+        </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div id="section-3" class="section" style="display: none;">
+        <!-- Main Title -->
+        <h1 class="main-title section-3-title">
+            To exercise your rights, or have any other questions, please contact us
+        </h1>
+    
+        <!-- Contact Icon -->
+        <div class="icon-container">
+            <img src="./img/06/contact.png" alt="Contact Icon" class="contact-icon">
+        </div>
+    </div>
+
+    <!-- Acknowledge Button -->
+    <button class="acknowledge-button">I Acknowledge</button>
+
+    <!-- Instructional Text -->
+    <div class="instruction-text">
+        Follow the steps to review and claim your <strong>"rights"</strong>!
+    </div>
+
+    <!-- Go Next Button -->
+    <div id="triangle-animation" class="triangle-animation" style="display: none;">
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+        <span class="triangle"></span>
+    </div>
+    <button id="go-next-button" class="go-next-button">Go Next</button>
+
+
+    <script>
+        const pageProgress = 6;
+        
+        // Section Description Text
+        document.addEventListener('DOMContentLoaded', () => {
+            const narrativeText = document.getElementById('narrative-text');
+            const originalContent = narrativeText.innerHTML.trim(); // Capture the original HTML content
+            narrativeText.innerHTML = ''; // Clear the content initially
+        
+            let container = document.createElement('div'); // Temporary container to parse HTML
+            container.innerHTML = originalContent; // Set the content to be parsed
+        
+            const elements = []; // Store elements and text nodes for animation
+        
+            function parseElement(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    // Text node: split into characters
+                    node.textContent.split('').forEach((char) => {
+                        elements.push({
+                            type: 'text',
+                            content: char,
+                        });
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Element node: preserve its structure
+                    const tag = node.tagName.toLowerCase();
+                    const element = {
+                        type: 'element',
+                        tag: tag,
+                        attributes: [...node.attributes].map((attr) => ({
+                            name: attr.name,
+                            value: attr.value,
+                        })),
+                        children: [],
+                    };
+                    elements.push(element);
+        
+                    // Recursively parse child nodes
+                    node.childNodes.forEach((child) => parseElement(child));
+                    elements.push({ type: 'end-element', tag: tag }); // Close the element
+                }
+            }
+        
+            // Parse the original content
+            container.childNodes.forEach((child) => parseElement(child));
+        
+            let index = 0;
+            let currentParent = narrativeText; // Use a variable to track the current parent element
+        
+            function typeNextElement() {
+                if (index < elements.length) {
+                    const current = elements[index];
+        
+                    if (current.type === 'text') {
+                        // Append text character
+                        currentParent.innerHTML += current.content;
+                    } else if (current.type === 'element') {
+                        // Open an HTML tag
+                        const newElement = document.createElement(current.tag);
+                        current.attributes.forEach((attr) =>
+                            newElement.setAttribute(attr.name, attr.value)
+                        );
+                        currentParent.appendChild(newElement);
+                        currentParent = newElement; // Temporarily make it the parent
+                    } else if (current.type === 'end-element') {
+                        // Close the current HTML tag
+                        currentParent = currentParent.parentElement;
+                    }
+        
+                    index++;
+                    setTimeout(typeNextElement, 50); // Adjust delay between characters/elements
+                }
+            }
+        
+            typeNextElement(); // Start the animation
+        });
+
+        // TODO 
+        // page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const acknowledgeButton = document.querySelector('.acknowledge-button');
+            const progressItems = document.querySelectorAll('.progress-item');
+            const sections = document.querySelectorAll('.section');
+            const goNextButton = document.querySelector('.go-next-button');
+            const triangleAnimation = document.querySelector('.triangle-animation');
+        
+            let currentSection = 1;
+        
+            // Function to update the progress panel
+            function updateProgressPanel(sectionIndex) {
+                const progressItem = progressItems[sectionIndex - 1]; // 0-based index
+                const circle = progressItem.querySelector('.progress-circle');
+                const text = progressItem.querySelector('.progress-text');
+        
+                // Update styles for the current progress item
+                circle.style.backgroundColor = 'lightgreen'; // Fill circle
+                circle.style.borderColor = 'lightgreen'; // Change border color
+                text.style.color = 'green'; // Change text color
+            }
+        
+            // Function to transition to the next section
+            function goToNextSection() {
+                const current = sections[currentSection - 1];
+                const next = sections[currentSection];
+        
+                // Fade out current section
+                current.style.transition = 'opacity 1s ease';
+                current.style.opacity = '0';
+        
+                // Wait 1s for fade-out animation, then move to the next section
+                setTimeout(() => {
+                    current.style.display = 'none'; // Hide the current section
+                    next.style.display = 'block'; // Show the next section
+                    next.style.opacity = '0'; // Start with invisible
+                    next.style.transition = 'opacity 1s ease';
+        
+                    setTimeout(() => {
+                        next.style.opacity = '1'; // Fade in the next section
+                    }, 50);
+        
+                    // Increment the current section index
+                    currentSection++;
+                }, 1000); // Wait 1 second
+            }
+        
+            // Event listener for the Acknowledge button
+            acknowledgeButton.addEventListener('click', () => {
+                if (currentSection <= sections.length) {
+                    // Update the progress panel for the current section
+                    updateProgressPanel(currentSection);
+        
+                    if (currentSection < sections.length) {
+                        // Transition to the next section if available
+                        goToNextSection();
+                    } else if (currentSection === sections.length) {
+                        // Show "Go Next" button for the last section
+                        setTimeout(() => {
+                            ShowGoNextButton();
+                            UpdateProgress(`${(pageProgress/6) * 100}%`)
+                        }, 1000); // Slight delay for smooth transition
+                    }
+                }
+            });
+        });
+
+
+
+
+
+        // Go Next Button
+        const goNextButton = document.getElementById('go-next-button');
+        const triangleAnimation = document.getElementById('triangle-animation');
+        const progressBar = document.getElementById('progress-bar');
+        const progressValue = localStorage.getItem('progressValue') || 0; // Default to 0 if not set
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click handler for "Go Next" button
+            goNextButton.addEventListener('click', () => {
+                localStorage.setItem('progressValue', pageProgress);
+                window.location.href = 'gamified-privacy-end.html'; // Navigate to the next page
+            });
+        });
+
+        // Progress bar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update the progress bar width
+            UpdateProgress(`${(progressValue/6) * 100}%`);
+        });
+
+        function ShowGoNextButton(){
+            goNextButton.classList.add('show'); // Show the button
+            triangleAnimation.style.display = 'flex'; // Show the triangle animation
+        }
+
+        function UpdateProgress(progressVal) {
+            progressBar.style.width = progressVal;
+        }
+    </script>
+</body>
+</html>

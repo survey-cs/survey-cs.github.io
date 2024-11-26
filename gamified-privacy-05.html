@@ -216,13 +216,157 @@
         }
 
         /* TODO */
+        /* Shelf Container */
+        .shelf-container {
+            position: absolute;
+            right: 10%; /* Center-right position */
+            top: 55%; /* Centered vertically */
+            transform: translateY(-50%); /* Adjust for centering */
+            width: 30%; /* Responsive width */
+            max-width: 400px; /* Maximum size */
+            min-width: 250px; /* Minimum size */
+        }
+        
+        /* Shelf Image */
+        .shelf-image {
+            width: 100%; /* Responsive scaling */
+            height: auto; /* Maintain aspect ratio */
+            transition: transform 0.3s ease; /* Smooth scaling animation */
+        }
+        .shelf-image:hover {
+            transform: scale(1.2); /* Enlarge slightly on hover */
+        }
+        
+        /* Shelf Text */
+        .shelf-text {
+            margin-bottom: 1rem; /* Add space between the text and the shelf */
+            text-align: center; /* Center the text above the shelf */
+            font-size: 2rem; /* Large font size */
+            font-weight: bold; /* Bold text */
+            color: black; /* Black text color */
+            font-family: Arial, sans-serif; /* Consistent font style */
+        }
 
+        /* Checklist Container */
+        .checklist-container {
+            position: absolute;
+            right: 45%; /* Center-left positioning */
+            top: 55%; /* Vertically centered */
+            transform: translateY(-50%); /* Adjust for centering */
+            width: 75%; /* Responsive width */
+            max-width: 400px; /* Maximum width for readability */
+            padding: 1rem;
+            background-color: white; /* Optional background for readability */
+            border: 2px solid #ccc; /* Subtle border */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        
+        /* Animation for Moving Checklist */
+        .checklist-container.move-left {
+            transform: translate(-60%, -50%); /* Move off-screen to the left */
+            transition: transform 1s ease; /* Smooth slide animation */
+        }
+
+        /* Checklist Title */
+        .checklist-title {
+            font-size: 1.4rem; /* Bold and readable */
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem; /* Spacing between title and options */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Animation for Section Title */
+        .checklist-title.completed {
+            color: darkgreen; /* Turn title darker green */
+            transition: color 0.3s ease; /* Smooth transition */
+        }
+        
+        /* Checklist Items */
+        .checklist {
+            list-style: none; /* Remove default bullet points */
+            padding: 0;
+            margin: 0;
+        }
+        
+        .checklist li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem; /* Spacing between options */
+        }
+
+        /* Animation for Checked Option */
+        .checklist li.checked {
+            background-color: lightgreen; /* Turn option green */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+        
+        /* Checkbox Styling */
+        .checklist input[type="checkbox"] {
+            margin-right: 0.8rem; /* Spacing between checkbox and label */
+            accent-color: lightgreen; /* Customize the checkbox color */
+            cursor: default; /* Indicate it’s non-interactive */
+        }
+        
+        /* Label Styling */
+        .checklist label {
+            font-size: 1rem; /* Slightly larger text for readability */
+            color: #555;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Book Container */
+        .book-container {
+            position: absolute;
+            top: 55%; /* Align vertically with the shelf */
+            right: 20%; /* Initial position off-screen */
+            transform: translate(-50%, -50%) scale(0); /* Start at size 0 */
+            width: 30%; /* Match the shelf size */
+            max-width: 400px; /* Maximum size */
+            min-width: 250px; /* Minimum size */
+            transition: transform 1s ease, left 1s ease; /* Smooth transition for size and position */
+            z-index: 200; /* Ensure it appears above other elements */
+        }
+        
+        /* Book Image */
+        .book-image {
+            width: 100%; /* Responsive scaling */
+            height: auto; /* Maintain aspect ratio */
+        }
+        
+        /* Book Text */
+        .book-text {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 1rem; /* Space between text and book */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Data Bubble */
+        .data-bubble {
+            position: absolute;
+            width: auto;
+            z-index = 999;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            color: white;
+            background-color: rgba(0, 128, 0, 0.8); /* Semi-transparent green */
+            border-radius: 10px;
+            opacity: 0; /* Start invisible */
+            transform: translate(-50%, -50%);
+            transition: transform 2s ease, opacity 0.3s ease; /* Fast fade-in/out, smooth movement */
+        }
 
     </style>
 </head>
 <body>
     <!-- Title -->
-    <div class="title">Use of Collected Information</div>
+    <div class="title">Retention of Data</div>
 
     <!-- Progress Bar -->
     <div id="progress-bar-container" class="progress-bar-container">
@@ -231,19 +375,59 @@
 
     <!-- Narrative Bubble -->
     <div class="narrative-bubble">
-        <p id="narrative-text" class="typing-text">This is how we <strong>USE</strong> your <strong>data</strong>...</p>
+        <p id="narrative-text" class="typing-text">Check how we <strong>RETAIN</strong> your <strong>data</strong>...</p>
         <img src="./img/narritive.png" alt="Narrative Avatar" class="narrative-avatar">
     </div> 
 
 
+
     <!-- TODO -->
+    <!-- Shelf Element -->
+    <div class="shelf-container">
+        <p class="shelf-text">Our Database</p>
+        <img src="./img/05/shelf.png" alt="Shelf Icon" class="shelf-image">
+    </div>
+
+    <!-- Book Element -->
+    <div class="book-container">
+        <p class="book-text">Your Data</p>
+        <img src="./img/05/book.png" alt="Book Icon" class="book-image">
+    </div>
+
+    <!-- Checklist -->
+    <div class="checklist-container">
+        <!-- First Section -->
+        <h2 class="checklist-title">We will retain your personal information only when:</h2>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="policy-necessary">
+                <label for="policy-necessary">Necessary to fulfill those outlined in this Policy</label>
+            </li>
+        </ul>
     
+        <!-- Second Section -->
+        <h2 class="checklist-title">Retention periods vary based on:</h2>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="legal-requirements">
+                <label for="legal-requirements">Legal requirements</label>
+            </li>
+            <li>
+                <input type="checkbox" id="nature-of-data">
+                <label for="nature-of-data">Nature of data</label>
+            </li>
+            <li>
+                <input type="checkbox" id="data-purposes">
+                <label for="data-purposes">Data collected purposes</label>
+            </li>
+        </ul>
+    </div>
 
     <!-- Instructional Text -->
     <div class="instruction-text">
-        Click each <strong>"factory"</strong> to deliver <strong>"data"</strong>!
+        Check each <strong>"option"</strong> to see how your <strong>"data"</strong> is retained!
     </div>
-    
+
     <!-- Go Next Button -->
     <div id="triangle-animation" class="triangle-animation" style="display: none;">
         <span class="triangle"></span>
@@ -331,52 +515,137 @@
         });
 
         // TODO 
+        // Checklist animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.checklist');
+            const titles = document.querySelectorAll('.checklist-title');
+            const checklistContainer = document.querySelector('.checklist-container');
+            const bookContainer = document.querySelector('.book-container');
+            const shelfContainer = document.querySelector('.shelf-container');
+        
+            // Function to check if all items in a section are checked
+            function checkSectionCompletion(section, title) {
+                const items = section.querySelectorAll('li');
+                const allChecked = [...items].every(item => item.classList.contains('checked'));
+        
+                if (allChecked) {
+                    title.classList.add('completed'); // Turn title darker green
+                }
+            }
+        
+            // Function to check if the entire checklist is completed
+            function checkChecklistCompletion() {
+                const allCompleted = [...titles].every(title => title.classList.contains('completed'));
+        
+                if (allCompleted) {
+                    checklistContainer.classList.add('move-left'); // Move checklist to the left
+
+                    // Show the book element after the checklist moves
+                    setTimeout(() => {
+                        bookContainer.style.transform = 'translate(-50%, -50%) scale(1)'; // Expand to full size
+        
+                        // Start the looping "Your Data" bubble animation
+                        setTimeout(() => {
+                            startBubbleLoop();
+                        }, 100); // Delay matches the book animation
+                    }, 100); // Delay matches the checklist animation
+
+                    // show the go next button and set Progress
+                    UpdateProgress(`${(pageProgress/6) * 100}%`);
+                    ShowGoNextButton();
+                }
+            }
+        
+            // Add click event listeners for checkboxes
+            sections.forEach((section, sectionIndex) => {
+                const checkboxes = section.querySelectorAll('input[type="checkbox"]');
+        
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.addEventListener('click', () => {
+                        const listItem = checkbox.closest('li');
+        
+                        if (!listItem.classList.contains('checked')) {
+                            listItem.classList.add('checked'); // Mark option as checked
+                        }
+        
+                        // Check section and overall checklist completion
+                        checkSectionCompletion(section, titles[sectionIndex]);
+                        checkChecklistCompletion();
+                    });
+                });
+            });
+        
+            // Function to start the looping "Your Data" bubble animation
+            function startBubbleLoop() {
+                const createAndAnimateBubble = () => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'data-bubble';
+                    bubble.innerText = 'Your Data';
+                    document.body.appendChild(bubble);
+        
+                    const bookRect = bookContainer.getBoundingClientRect();
+                    const shelfRect = shelfContainer.getBoundingClientRect();
+        
+                    // Set initial position at the center of the book
+                    bubble.style.left = `${bookRect.left + bookRect.width / 2}px`;
+                    bubble.style.top = `${bookRect.top + 30 + bookRect.height / 2}px`;
+        
+                    // Animate to the center of the shelf
+                    const shelfCenterX = shelfRect.left + shelfRect.width / 2;
+                    const shelfCenterY = shelfRect.top + shelfRect.height / 2;
+        
+                    // Apply animation
+                    setTimeout(() => {
+                        bubble.style.opacity = '1'; // Quickly appear
+                        bubble.style.transform = `translate(${shelfCenterX - (bookRect.left + bookRect.width / 2) - 30}px, 
+                            ${shelfCenterY - (bookRect.top + bookRect.height / 2) - 20}px)`;
+                    
+                        // Fade out near the end of the animation
+                        setTimeout(() => {
+                            bubble.style.opacity = '0'; // Quickly disappear
+                        }, 1700); // Timing slightly before the movement ends (e.g., 300ms before 2s)
+                    }, 50);
+
+                    // Remove bubble after animation
+                    setTimeout(() => {
+                        bubble.remove();
+                    }, 2000); // Adjust timing to match animation duration
+                };
+        
+                // Start the looping animation
+                setInterval(createAndAnimateBubble, 2000); // Create a new bubble every 1 seconds
+            }
+        });
+
 
 
         // Go Next Button
+        const goNextButton = document.getElementById('go-next-button');
+        const triangleAnimation = document.getElementById('triangle-animation');
+        const progressBar = document.getElementById('progress-bar');
+        const progressValue = localStorage.getItem('progressValue') || 0; // Default to 0 if not set
         document.addEventListener('DOMContentLoaded', () => {
-            const goNextButton = document.getElementById('go-next-button');
-            const triangleAnimation = document.getElementById('triangle-animation');
-            const progressBar = document.getElementById('progress-bar');
-        
-            let visitedFactories = 0; // Track visited factories
-            
-            const checkCompletion = () => {
-                if (visitedFactories === 4) { // All factories visited
-                    goNextButton.classList.add('show'); // Show the button
-                    triangleAnimation.style.display = 'flex'; // Show the triangle animation
-                    progressBar.style.width = `${(pageProgress / 6) * 100}%`; // Update progress bar
-                }
-            };
-        
-            // Update visited factories logic
-            const toggles = document.querySelectorAll('.toggle-icon');
-            toggles.forEach((toggle) => {
-                const observer = new MutationObserver(() => {
-                    if (toggle.style.backgroundColor === 'green') {
-                        visitedFactories++;
-                        observer.disconnect(); // Prevent double counting
-                        checkCompletion(); // Check if all factories are visited
-                    }
-                });
-                observer.observe(toggle, { attributes: true, attributeFilter: ['style'] });
-            });
-        
             // Add click handler for "Go Next" button
             goNextButton.addEventListener('click', () => {
                 localStorage.setItem('progressValue', pageProgress);
-                window.location.href = 'gamified-privacy-03.html'; // Navigate to the next page
+                window.location.href = 'gamified-privacy-06.html'; // Navigate to the next page
             });
         });
 
         // Progress bar
         document.addEventListener('DOMContentLoaded', () => {
-            const progressBar = document.getElementById('progress-bar');
-            const progressValue = localStorage.getItem('progressValue') || 0; // Default to 0 if not set
-        
             // Update the progress bar width
-            progressBar.style.width = `${(progressValue/6) * 100}%`;
+            UpdateProgress(`${(progressValue/6) * 100}%`);
         });
+
+        function ShowGoNextButton(){
+            goNextButton.classList.add('show'); // Show the button
+            triangleAnimation.style.display = 'flex'; // Show the triangle animation
+        }
+
+        function UpdateProgress(progressVal) {
+            progressBar.style.width = progressVal;
+        }
     </script>
 </body>
 </html>
